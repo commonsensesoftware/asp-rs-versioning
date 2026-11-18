@@ -1,0 +1,33 @@
+[package]
+name = "api-versioning-axum"
+readme = "README.md"
+description = "An HTTP API versioning library for Axum"
+keywords = ["asp", "api", "versioning", "axum"]
+version.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+edition.workspace = true
+
+[dependencies]
+api-versioning = { path = "../asp", features = ["problem-details", "serde"] }
+axum.workspace = true
+bitflags.workspace = true
+const_format = { workspace = true, features = ["fmt"] }
+headers.workspace = true
+http.workspace = true
+httpdate.workspace = true
+serde_json.workspace = true
+smallvec.workspace = true
+thiserror.workspace = true
+time = { workspace = true, features = ["formatting", "macros", "parsing"] }
+tower-layer.workspace = true
+tower-service.workspace = true
+
+[dev-dependencies]
+anyhow.workspace = true
+rstest.workspace = true
+api-versioning = { path = "../asp", features = ["macros"] }
+serde = { workspace = true, features = ["derive"] }
+tokio = { version = "1.54.1", features = ["macros", "net", "rt-multi-thread"] }
+tower = { version = "0.5.3", features = ["util"] }

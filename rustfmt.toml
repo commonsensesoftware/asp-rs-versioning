@@ -1,0 +1,5 @@
+max_width = 120
+
+# https://github.com/rust-lang/rustfmt/blob/main/Configurations.md#skip_macro_invocations
+unstable_features = true
+skip_macro_invocations = ["api_version", "pattern"]

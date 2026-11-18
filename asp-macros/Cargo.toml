@@ -1,0 +1,22 @@
+[package]
+name = "api-versioning-macros"
+description = "Procedural macros for HTTP API versioning"
+keywords = ["asp", "api", "versioning", "macros"]
+version.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+edition.workspace = true
+
+[lib]
+proc-macro = true
+
+[dependencies]
+proc-macro2.workspace = true
+quote.workspace = true
+syn = { workspace = true, features = ["full"] }
+
+[dev-dependencies]
+api-versioning = { path = "../asp", default-features = false, features = ["macros"] }
+serde = { workspace = true, features = ["derive"] }
+serde_json.workspace = true

@@ -1,0 +1,36 @@
+[package]
+name = "api-versioning"
+readme = "README.md"
+description = "An HTTP API versioning library for Rust"
+keywords = ["asp", "api", "versioning"]
+version.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+edition.workspace = true
+
+[features]
+default = ["http"]
+http = ["dep:headers", "dep:http", "dep:httpdate"]
+macros = ["serde", "dep:api-versioning-macros"]
+serde = ["dep:serde"]
+problem-details = ["dep:serde", "serde/derive", "dep:serde_json"]
+
+[dependencies]
+api-versioning-macros = { path = "../asp-macros", optional = true }
+bitflags.workspace = true
+const_format = { workspace = true, features = ["fmt"] }
+headers = { workspace = true, optional = true }
+http = { workspace = true, optional = true }
+httpdate = { workspace = true, optional = true }
+serde = { workspace = true, optional = true }
+serde_json = { workspace = true, optional = true }
+smallvec.workspace = true
+thiserror.workspace = true
+time = { workspace = true, features = ["formatting", "macros", "parsing"] }
+
+[dev-dependencies]
+anyhow.workspace = true
+rstest.workspace = true
+serde = { workspace = true, features = ["derive"] }
+serde_json.workspace = true

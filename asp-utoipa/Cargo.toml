@@ -1,0 +1,30 @@
+[package]
+name = "api-versioning-utoipa"
+readme = "README.md"
+description = "OpenAPI documents for versioned HTTP APIs using utoipa"
+keywords = ["asp", "api", "versioning", "openapi", "utoipa"]
+version.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+edition.workspace = true
+
+[dependencies]
+axum.workspace = true
+api-versioning = { path = "../asp", features = ["serde"] }
+api-versioning-axum = { path = "../asp-axum" }
+api-versioning-macros = { path = "../asp-macros" }
+http.workspace = true
+serde_json.workspace = true
+time = { workspace = true, features = ["serde"] }
+utoipa.workspace = true
+
+[dev-dependencies]
+anyhow.workspace = true
+rstest.workspace = true
+api-versioning = { path = "../asp", features = ["macros"] }
+serde = { workspace = true, features = ["derive"] }
+tokio = { version = "1.54.1", features = ["macros", "net", "rt-multi-thread"] }
+tower = { version = "0.5.3", features = ["util"] }
+utoipa-scalar = { version = "0.4.0", features = ["axum"] }
+utoipa-swagger-ui = { version = "10.0.2", features = ["axum", "vendored"] }
