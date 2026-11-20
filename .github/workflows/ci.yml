@@ -99,3 +99,23 @@ jobs:
       # deliberate, reviewable change
       - name: Cargo Clippy
         run: cargo clippy --workspace --all-targets --all-features -- -D warnings
+
+      # REF: https://crates.io/crates/cargo-rdme
+
+      # the version is pinned for the same reason as the lint toolchain. the binary is
+      # cached by rust-cache, so it is only built when the version changes
+      # intralinks are resolved with rustdoc using a nightly toolchain that is pinned by
+      # each cargo-rdme release, so it changes with the version above. --check generates
+      # the README to compare it, so it needs the toolchain too
+      - name: Install Cargo README
+        run: |
+          cargo install cargo-rdme --locked --version 2.2.3
+          cargo rdme install-rust-toolchain-for-intralinks
+
+      # the README of each crate with cargo-rdme markers is generated from its crate
+      # documentation; this fails when a README was not regenerated after a change
+      - name: Cargo README
+        run: |
+          for crate in api-versioning api-versioning-axum api-versioning-utoipa; do
+            cargo rdme --check --workspace-project "$crate"
+          done

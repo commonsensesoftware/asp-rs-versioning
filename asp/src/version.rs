@@ -95,6 +95,8 @@ mod deserializing;
 mod formatting;
 mod parsing;
 mod reading;
+#[cfg(feature = "serde")]
+mod serializing;
 
 use builtin::mask;
 pub use custom::{CustomFormat, SetCustomFormatError, set_custom_format};

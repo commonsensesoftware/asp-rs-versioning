@@ -1,14 +1,17 @@
 //! # Features
 //!
-//! | feature           | default | description                                                                    |
-//! | ----------------- | ------- | ------------------------------------------------------------------------------ |
-//! | `http`            | yes     | HTTP readers, selectors, policies, headers, and reporting                      |
-//! | `serde`           | no      | deserializing an [ApiVersion] and the [visibility] of serialized members       |
-//! | `macros`          | no      | the `#[visible_in_version]` attribute; implies `serde`                         |
-//! | `problem-details` | no      | [problem details](problem) as defined by RFC 9457                              |
+//! | Feature             | Default | Description                                                                       |
+//! | ------------------- | ------- | --------------------------------------------------------------------------------- |
+//! | **http**            | yes     | HTTP readers, selectors, policies, headers, and reporting                         |
+//! | **serde**           | yes     | (de)serializing an [ApiVersion] and the [visibility] of serialized members        |
+//! | **macros**          | yes     | the `#[visible_in_version]` attribute; implies `serde`                            |
+//! | **problem-details** | yes     | [problem details](problem) as defined by [RFC 9457]                               |
 //!
 //! [ApiVersion], [api_version!], and models never require HTTP. A crate that only defines versioned models can use
 //! `default-features = false` with the `macros` feature.
+//!
+//! [ApiVersion]: https://docs.rs/api-versioning/latest/api_versioning/struct.ApiVersion.html
+//! [RFC 9457]: https://www.rfc-editor.org/rfc/rfc9457.html
 
 /// Contains functionality related to API versioning HTTP headers.
 #[cfg(feature = "http")]

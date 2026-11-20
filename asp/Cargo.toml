@@ -10,7 +10,7 @@ repository.workspace = true
 edition.workspace = true
 
 [features]
-default = ["http"]
+default = ["http", "macros", "problem-details"]
 http = ["dep:headers", "dep:http", "dep:httpdate"]
 macros = ["serde", "dep:api-versioning-macros"]
 serde = ["dep:serde"]

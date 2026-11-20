@@ -1,0 +1,55 @@
+# For more info on HTTP files go to https://aka.ms/vs/httpfile
+
+@baseUrl = http://localhost:3000
+
+### ------------------------------ BY QUERY STRING ------------------------------
+
+### VERSION 1.0
+
+### Accounts - Get by ID
+GET {{baseUrl}}/accounts/42?api-version=1.0
+
+### Orders - Get by ID
+GET {{baseUrl}}/orders/42?api-version=1.0
+
+### VERSION 2.0
+
+### Accounts - Get by ID
+GET {{baseUrl}}/accounts/42?api-version=2.0
+
+### Orders - Get by ID
+GET {{baseUrl}}/orders/42?api-version=2.0
+
+### VERSION 3.0
+
+### Accounts - Get by ID
+GET {{baseUrl}}/accounts/42?api-version=3.0
+
+### Orders - Get by ID
+GET {{baseUrl}}/orders/42?api-version=3.0
+
+### ------------------------------ BY URL SEGMENT ------------------------------
+
+### VERSION 1.0
+
+### Accounts - Get by ID
+GET {{baseUrl}}/v1/accounts/42
+
+### Orders - Get by ID
+GET {{baseUrl}}/v1/orders/42
+
+### VERSION 2.0
+
+### Accounts - Get by ID
+GET {{baseUrl}}/v2/accounts/42
+
+### Orders - Get by ID
+GET {{baseUrl}}/v2/orders/42
+
+### VERSION 3.0
+
+### Accounts - Get by ID
+GET {{baseUrl}}/v3/accounts/42
+
+### Orders - Get by ID
+GET {{baseUrl}}/v3/orders/42

@@ -10,7 +10,7 @@ repository.workspace = true
 edition.workspace = true
 
 [dependencies]
-api-versioning = { path = "../asp", features = ["problem-details", "serde"] }
+api-versioning = { path = "../asp" }
 axum.workspace = true
 bitflags.workspace = true
 const_format = { workspace = true, features = ["fmt"] }
@@ -26,8 +26,9 @@ tower-service.workspace = true
 
 [dev-dependencies]
 anyhow.workspace = true
+rand = "0.10.4"
 rstest.workspace = true
-api-versioning = { path = "../asp", features = ["macros"] }
 serde = { workspace = true, features = ["derive"] }
+time = { workspace = true, features = ["formatting", "macros", "parsing", "serde"] }
 tokio = { version = "1.54.1", features = ["macros", "net", "rt-multi-thread"] }
 tower = { version = "0.5.3", features = ["util"] }

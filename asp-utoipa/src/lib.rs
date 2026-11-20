@@ -1,62 +1,69 @@
-//! OpenAPI documents for versioned APIs using [utoipa].
+//! # Overview
 //!
-//! # Remarks
+//! This crate provides API Versioning support for OpenAPI documents with [utoipa].
 //!
-//! A separate OpenAPI document is created for each API version declared by the APIs in a
-//! [Router](api_versioning_axum::Router). Each document contains only the operations that map to its API version, along
-//! with every version-neutral operation.
+//! A separate OpenAPI document is created for each API version declared by the APIs in a [Router]. Each document
+//! contains only the operations that map to its API version, along with every version-neutral operation.
 //!
 //! A handler is described by annotating it with `#[utoipa::path]` and adding it to an API with [doc!]. The path of the
-//! operation comes from the router. utoipa requires the `path` argument of `#[utoipa::path]`, but its value is ignored,
-//! so the convention is `path = ""`. The HTTP method is required and must match the method the handler is added for. A
-//! handler that is not added with [doc!] is not part of any document.
+//! operation comes from the router. [utoipa] requires the `path` argument of `#[utoipa::path]`, but its value is
+//! ignored, so the convention is `path = ""`. The HTTP method is required and must match the method the handler is
+//! added for. A handler that is not added with [doc!] is not part of any document.
 //!
 //! Each document:
 //!
-//! * has the API version as its `info.version` and the [name](ApiDocument::name) of the API version appended to its
-//!   title, such as `Orders | v1`
-//! * has a Markdown description with deprecation and sunset notices, followed by the links of their policies
-//! * has the links of the deprecation and sunset policies in the `x-api-versioning` extension
-//! * uses the logical name of each API, if any, as the tag of its operations, which describes the policies defined for
+//! - has the API version as its `info.version` and the [name] of the API version appended to its title, such as
+//!   `Orders | v1`
+//! - has a Markdown description with deprecation and sunset notices, followed by the links of their policies
+//! - has the links of the deprecation and sunset policies in the `x-api-versioning` extension
+//! - uses the logical name of each API, if any, as the tag of its operations, which describes the policies defined for
 //!   the API by name and whether the API is deprecated when the API version is not deprecated by every API
-//! * marks the operations that deprecate the API version as deprecated
-//! * has the API version parameters defined by the configured API version reader, which are optional and default to
+//! - marks the operations that deprecate the API version as deprecated
+//! - has the API version parameters defined by the configured API version reader, which are optional and default to
 //!   the default API version in its document when an unspecified API version is assumed
-//! * has the schemas referenced by its operations, which only have the members visible in the API version when they
+//! - has the schemas referenced by its operations, which only have the members visible in the API version when they
 //!   use `#[visible_in_version]`
 //!
-//! The documents can be served as JSON with [routes], which serves each document at its [URL](ApiDocument::url). They
-//! can also be served by any other means, such as utoipa-swagger-ui or utoipa-scalar.
+//! The documents can be served as JSON with [routes], which serves each document at its [URL]. They can also be served
+//! by any other means, such as [utoipa-scalar] or [utoipa-swagger-ui].
 //!
-//! # Examples
+//! # API Versioning in Action
 //!
-//! ```
+//! ```rust
 //! use api_versioning::{Options, api_version};
 //! use api_versioning_axum::Router;
 //! use api_versioning_utoipa::{doc, documents};
 //! use utoipa::OpenApi;
 //!
 //! #[derive(OpenApi)]
-//! #[openapi(info(title = "Orders"))]
+//! #[openapi(info(title = "Example API", description = "An example API."))]
 //! struct ApiDoc;
 //!
 //! mod v1 {
-//!     /// Gets the orders.
-//!     #[utoipa::path(get, path = "", responses((status = 200, body = String)))]
+//!     #[utoipa::path(
+//!         get,
+//!         path = "",
+//!         summary = "Get Orders",
+//!         description = "Retrieves all orders.",
+//!         responses((status = 200, body = String)))]
 //!     pub async fn get_orders() -> &'static str {
 //!         "orders"
 //!     }
 //! }
 //!
 //! mod v2 {
-//!     /// Gets the orders.
-//!     #[utoipa::path(get, path = "", responses((status = 200, body = String)))]
+//!     #[utoipa::path(
+//!         get,
+//!         path = "",
+//!         summary = "Get Orders",
+//!         description = "Retrieves all orders.",
+//!         responses((status = 200, body = String)))]
 //!     pub async fn get_orders() -> &'static str {
 //!         "orders, version 2"
 //!     }
 //! }
 //!
-//! let (app, apis): (axum::Router, _) = Router::new(Options::default())
+//! let (app, apis): (axum::Router, _) = Router::default()
 //!     .api("/orders", |api| {
 //!         api.name("Orders")
 //!             .has([api_version!(1.0), api_version!(2.0)])
@@ -64,12 +71,20 @@
 //!     })
 //!     .split();
 //! let documents = documents(&apis, ApiDoc::openapi());
-//!
-//! assert_eq!(documents[0].name(), "v1");
-//! assert_eq!(documents[0].url(), "/openapi/v1.json");
-//! assert_eq!(documents[0].openapi().info.title, "Orders | v1");
-//! assert_eq!(documents[1].openapi().info.version, "2.0");
+//! #
+//! # assert_eq!(documents[0].name(), "v1");
+//! # assert_eq!(documents[0].url(), "/openapi/v1.json");
+//! # assert_eq!(documents[0].openapi().info.title, "Example API | v1");
+//! # assert_eq!(documents[1].openapi().info.version, "2.0");
 //! ```
+//!
+//! [utoipa]: https://crates.io/crates/utoipa
+//! [utoipa-scalar]: https://crates.io/crates/utoipa-scalar
+//! [utoipa-swagger-ui]: https://crates.io/crates/utoipa-swagger-ui
+//! [Router]: https://docs.rs/api-versioning-axum/latest/api_versioning_axum/struct.Router.html
+//! [name]: https://docs.rs/api-versioning-utoipa/latest/api_versioning_utoipa/struct.ApiDocument.html#method.name
+//! [routes]: https://docs.rs/api-versioning-utoipa/latest/api_versioning_utoipa/fn.routes.html
+//! [URL]: https://docs.rs/api-versioning-utoipa/latest/api_versioning_utoipa/struct.ApiDocument.html#method.url
 
 mod document;
 mod generator;

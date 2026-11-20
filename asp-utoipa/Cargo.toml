@@ -11,7 +11,7 @@ edition.workspace = true
 
 [dependencies]
 axum.workspace = true
-api-versioning = { path = "../asp", features = ["serde"] }
+api-versioning = { path = "../asp" }
 api-versioning-axum = { path = "../asp-axum" }
 api-versioning-macros = { path = "../asp-macros" }
 http.workspace = true
@@ -22,7 +22,7 @@ utoipa.workspace = true
 [dev-dependencies]
 anyhow.workspace = true
 rstest.workspace = true
-api-versioning = { path = "../asp", features = ["macros"] }
+api-versioning = { path = "../asp" }
 serde = { workspace = true, features = ["derive"] }
 tokio = { version = "1.54.1", features = ["macros", "net", "rt-multi-thread"] }
 tower = { version = "0.5.3", features = ["util"] }

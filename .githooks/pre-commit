@@ -1,0 +1,16 @@
+#!/bin/sh
+# .githooks/pre-commit
+set -e
+
+# rustfmt runs on nightly because rustfmt.toml uses unstable settings
+cargo +nightly fmt --all --check
+
+if command -v cargo-rdme >/dev/null 2>&1; then
+    # the workspace has no root package, so each crate with a generated README is checked
+    for crate in api-versioning api-versioning-axum api-versioning-utoipa; do
+        cargo rdme --check --workspace-project "$crate"
+    done
+else
+    echo "warning: cargo-rdme is not installed; skipping README check" >&2
+    echo "         install with: cargo install cargo-rdme" >&2
+fi

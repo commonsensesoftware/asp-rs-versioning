@@ -1,4 +1,4 @@
-//! Run with `cargo run -p api-versioning-utoipa --example scalar`, then browse to:
+//! Run with `cargo run --package api-versioning-utoipa --example scalar`, then browse to:
 //!
 //! * Scalar with a document for each API version: <http://localhost:3000/scalar>
 //! * The OpenAPI document for API version 1.0: <http://localhost:3000/openapi/v1.json>
@@ -10,10 +10,13 @@ use api_versioning_utoipa::routes;
 use serde_json::{Value, json};
 use utoipa_scalar::{Scalar, Servable};
 
-/// The HTML of the Scalar page, which is configured with `$spec`.
-///
-/// Scalar embeds a single document by default. Each document is served by routes instead, and Scalar is configured
-/// with the URL of each document so that the API version can be selected on the page.
+// The HTML of the Scalar page, which is configured with `$spec`.
+//
+// Scalar embeds a single document by default. Each document is served by routes instead and Scalar is configured
+// with the URL of each document so that the API version can be selected on the page.
+//
+// The default template of utoipa-scalar always embeds `$spec` as a document, so a configuration such as `sources`
+// requires a custom template. See <https://github.com/juhaku/utoipa/issues/1005>.
 const HTML: &str = r#"<!doctype html>
 <html>
 <head>
@@ -33,8 +36,6 @@ const HTML: &str = r#"<!doctype html>
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     let (app, documents) = common::app();
-
-    // the latest API version is selected by default
     let latest = documents.len() - 1;
     let sources: Vec<Value> = documents
         .iter()
@@ -50,7 +51,7 @@ async fn main() -> anyhow::Result<()> {
         .collect();
     let scalar = Scalar::with_url("/scalar", json!({ "sources": sources }))
         .custom_html(HTML)
-        .title("Orders");
+        .title("API Reference");
     let app = app.merge(routes(&documents)).merge(scalar);
     let listener = tokio::net::TcpListener::bind(common::ADDRESS).await?;
 
