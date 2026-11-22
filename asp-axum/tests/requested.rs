@@ -1,6 +1,7 @@
 use api_versioning::{
     Options, api_version,
-    readers::{HeaderReader, UrlReader, combine},
+    prelude::*,
+    readers::{HeaderReader, UrlReader},
 };
 use api_versioning_axum::{RequestedApiVersion, Router};
 use axum::{Extension, body::Body};
@@ -104,9 +105,7 @@ async fn handler_should_receive_requested_version(#[case] uri: &str, #[case] exp
 async fn handler_should_receive_requested_version_from_header() -> Result {
     // arrange
     let options = Options {
-        reader: combine(HeaderReader::new("x-api-version"))
-            .with(UrlReader::default())
-            .into(),
+        reader: HeaderReader::new("x-api-version").combine(UrlReader::default()).into(),
         ..Default::default()
     };
     let app = orders(options);

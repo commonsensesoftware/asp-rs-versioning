@@ -1,7 +1,8 @@
 use crate::{
     ApiVersion,
     policy::Policies,
-    readers::{self, QueryStringReader, Reader, UrlReader},
+    prelude::*,
+    readers::{QueryStringReader, Reader, UrlReader},
     selectors::{ConstantSelector, Selector},
 };
 
@@ -115,9 +116,7 @@ impl Default for Options {
             assume_default_version_when_unspecified: false,
             default_version: ApiVersion::DEFAULT,
             selector: None,
-            reader: readers::combine(QueryStringReader::default())
-                .with(UrlReader::default())
-                .into(),
+            reader: QueryStringReader::default().combine(UrlReader::default()).into(),
             policies: Policies::default(),
             unsupported_status_code: 400,
         }

@@ -1,7 +1,8 @@
 use api_versioning::{
     ApiVersion, Options, ReportOptions, api_version,
+    prelude::*,
     problem::{ProblemDetails, ProblemType},
-    readers::{QueryStringReader, UrlReader, combine},
+    readers::{QueryStringReader, UrlReader},
 };
 use api_versioning_axum::{RequestedApiVersion, Router};
 use axum::{body::Body, extract::Path};
@@ -254,7 +255,7 @@ async fn request_should_not_read_other_route_parameters_as_version() -> Result {
 async fn request_should_read_version_from_custom_route_parameter() -> Result {
     // arrange
     let router = Router::new(Options {
-        reader: combine(UrlReader::new("ver")).with(QueryStringReader::default()).into(),
+        reader: UrlReader::new("ver").combine(QueryStringReader::default()).into(),
         ..Default::default()
     });
     let app: axum::Router = router

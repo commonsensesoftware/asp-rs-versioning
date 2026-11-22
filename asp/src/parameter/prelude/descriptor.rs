@@ -126,26 +126,26 @@ impl DescriptorExt for dyn Descriptor + '_ {
 
 #[cfg(test)]
 mod tests {
-    use super::DescriptorExt;
-    use crate::pattern;
-    use crate::readers::{HeaderReader, MediaTypeReader, QueryStringReader, UrlReader, combine};
     use crate::{
         parameter::{
             Descriptor,
             Location::{self, *},
+            prelude::*,
         },
-        readers::CombinedReader,
+        pattern,
+        prelude::*,
+        readers::*,
     };
     use rstest::rstest;
 
     fn query_and_header() -> CombinedReader {
-        combine(QueryStringReader::default()).with(HeaderReader::new("x-api-version"))
+        QueryStringReader::default().combine(HeaderReader::new("x-api-version"))
     }
 
     #[rstest]
     #[case(&QueryStringReader::default(), false, true)]
     #[case(&QueryStringReader::default(), true, true)]
-    #[case(&QueryStringReader::many(["api-version", "v"]), false, true)]
+    #[case(&QueryStringReader::new(["api-version", "v"]), false, true)]
     #[case(&HeaderReader::new("x-api-version"), true, false)]
     #[case(&MediaTypeReader::default(), true, false)]
     #[case(&query_and_header(), false, false)]
@@ -167,7 +167,7 @@ mod tests {
     #[rstest]
     #[case(&HeaderReader::new("x-api-version"), false, true)]
     #[case(&HeaderReader::new("x-api-version"), true, true)]
-    #[case(&HeaderReader::many(["x-api-version", "x-ms-version"]), false, true)]
+    #[case(&HeaderReader::new(["x-api-version", "x-ms-version"]), false, true)]
     #[case(&QueryStringReader::default(), true, false)]
     #[case(&MediaTypeReader::default(), true, false)]
     #[case(&query_and_header(), false, false)]
@@ -192,18 +192,8 @@ mod tests {
     #[case(&MediaTypeReader::template(pattern!(application/vnd.{v})), false, true)]
     #[case(&QueryStringReader::default(), true, false)]
     #[case(&HeaderReader::new("x-api-version"), true, false)]
-    #[case(
-        &combine(QueryStringReader::default())
-            .with(HeaderReader::new("x-api-version")),
-        false,
-        false
-    )]
-    #[case(
-        &combine(MediaTypeReader::default())
-            .with(HeaderReader::new("x-api-version")),
-        true,
-        true
-    )]
+    #[case(&QueryStringReader::default().combine(HeaderReader::new("x-api-version")), false, false)]
+    #[case(&MediaTypeReader::default().combine(HeaderReader::new("x-api-version")), true, true)]
     fn versions_by_media_type_should_return_expected_result(
         #[case] descriptor: &dyn Descriptor,
         #[case] allow_multiple_locations: bool,
@@ -221,11 +211,11 @@ mod tests {
     #[rstest]
     #[case(&UrlReader::default(), false, true)]
     #[case(&UrlReader::default(), true, true)]
-    #[case(&UrlReader::many(["api_version", "ver"]), false, true)]
+    #[case(&UrlReader::new(["api_version", "ver"]), false, true)]
     #[case(&QueryStringReader::default(), true, false)]
     #[case(&HeaderReader::new("x-api-version"), true, false)]
-    #[case(&combine(UrlReader::default()).with(QueryStringReader::default()), false, false)]
-    #[case(&combine(UrlReader::default()).with(QueryStringReader::default()), true, true)]
+    #[case(&UrlReader::default().combine(QueryStringReader::default()), false, false)]
+    #[case(&UrlReader::default().combine(QueryStringReader::default()), true, true)]
     fn versions_by_url_should_return_expected_result(
         #[case] descriptor: &dyn Descriptor,
         #[case] allow_multiple_locations: bool,
@@ -255,9 +245,9 @@ mod tests {
     #[case(&query_and_header(), Query, Some("api-version"))]
     #[case(&query_and_header(), Header, Some("x-api-version"))]
     #[case(&query_and_header(), MediaType, None)]
-    #[case(&QueryStringReader::many(["api-version", "v"]), Query, Some("api-version"))]
-    #[case(&HeaderReader::many(["x-api-version", "x-ms-version"]), Header, Some("x-api-version"))]
-    #[case(&HeaderReader::many(["X-API-Version", "x-api-version"]), Header, Some("X-API-Version"))]
+    #[case(&QueryStringReader::new(["api-version", "v"]), Query, Some("api-version"))]
+    #[case(&HeaderReader::new(["x-api-version", "x-ms-version"]), Header, Some("x-api-version"))]
+    #[case(&HeaderReader::new(["X-API-Version", "x-api-version"]), Header, Some("X-API-Version"))]
     fn parameter_should_return_name_for_location(
         #[case] descriptor: &dyn Descriptor,
         #[case] location: Location,
@@ -274,18 +264,20 @@ mod tests {
 
     #[rstest]
     #[case(&QueryStringReader::default(), Query, &["api-version"])]
-    #[case(&QueryStringReader::many(["api-version", "v"]), Query, &["api-version", "v"])]
-    #[case(&QueryStringReader::many(["api-version", "API-Version"]), Query, &["api-version"])]
+    #[case(&QueryStringReader::new(["api-version", "v"]), Query, &["api-version", "v"])]
+    #[case(&QueryStringReader::new(["api-version", "API-Version"]), Query, &["api-version"])]
     #[case(&QueryStringReader::default(), Header, &[])]
-    #[case(&HeaderReader::many(["x-api-version", "x-ms-version"]), Header, &["x-api-version", "x-ms-version"])]
-    #[case(&HeaderReader::many(["X-API-Version", "x-api-version"]), Header, &["X-API-Version"])]
+    #[case(&HeaderReader::new(["x-api-version", "x-ms-version"]), Header, &["x-api-version", "x-ms-version"])]
+    #[case(&HeaderReader::new(["X-API-Version", "x-api-version"]), Header, &["X-API-Version"])]
     #[case(&MediaTypeReader::default(), MediaType, &["v"])]
+    #[case(&MediaTypeReader::new(["v", "ver"]), MediaType, &["v", "ver"])]
+    #[case(&UrlReader::new(["api_version", "ver"]), Path, &["api_version", "ver"])]
     #[case(&query_and_header(), Query, &["api-version"])]
     #[case(&query_and_header(), Header, &["x-api-version"])]
     #[case(
-        &combine(QueryStringReader::default())
-            .with(QueryStringReader::new("API-VERSION"))
-            .with(QueryStringReader::new("v")),
+        &QueryStringReader::default()
+            .combine(QueryStringReader::new("API-VERSION"))
+            .combine(QueryStringReader::new("v")),
         Query,
         &["api-version", "v"]
     )]

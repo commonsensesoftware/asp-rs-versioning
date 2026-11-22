@@ -1,6 +1,7 @@
 use api_versioning::{
     ApiVersion, Options, api_version,
-    readers::{HeaderReader, MediaTypeReader, QueryStringReader, UrlReader, combine},
+    prelude::*,
+    readers::{HeaderReader, MediaTypeReader, QueryStringReader, UrlReader},
 };
 use api_versioning_axum::{ApiDescriptions, Router};
 use api_versioning_utoipa::{ApiDocument, DocumentOptions, doc, documents, documents_with};
@@ -305,8 +306,8 @@ fn documents_should_only_include_schemas_referenced_by_operations() {
 fn documents_should_add_version_parameters_from_query_string_and_header() {
     // arrange
     let options = Options {
-        reader: combine(QueryStringReader::default())
-            .with(HeaderReader::new("x-api-version"))
+        reader: QueryStringReader::default()
+            .combine(HeaderReader::new("x-api-version"))
             .into(),
         ..Default::default()
     };
@@ -395,7 +396,7 @@ fn documents_should_add_optional_version_parameter_for_assumed_default_version()
 
 fn url_apis(options: Options) -> ApiDescriptions {
     Router::<()>::new(Options {
-        reader: combine(UrlReader::default()).with(QueryStringReader::default()).into(),
+        reader: UrlReader::default().combine(QueryStringReader::default()).into(),
         ..options
     })
     .api("/v{api_version}/orders", |api| {

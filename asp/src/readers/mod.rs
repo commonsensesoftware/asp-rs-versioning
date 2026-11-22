@@ -1,9 +1,11 @@
+mod combine;
 mod header;
 mod media;
 mod names;
 mod query;
 mod url;
 
+pub use combine::CombinedReader;
 pub use header::HeaderReader;
 pub use media::MediaTypeReader;
 pub use names::IntoNames;
@@ -33,87 +35,10 @@ impl Clone for Box<dyn Reader> {
     }
 }
 
-/// Represents a combined API version reader that aggregates multiple individual readers.
-#[derive(Debug, Default)]
-pub struct CombinedReader(Vec<Box<dyn Reader>>);
-
-impl CombinedReader {
-    fn new(reader: impl Reader + 'static) -> Self {
-        let mut readers = Vec::with_capacity(2);
-        readers.push(Box::new(reader) as Box<dyn Reader>);
-        Self(readers)
-    }
-
-    /// Adds an additional API version reader to the combined reader.
-    ///
-    /// # Arguments
-    ///
-    /// * `reader` - the API version [reader](Reader) to add to the combined reader
-    pub fn with(mut self, reader: impl Reader + 'static) -> Self {
-        self.0.push(Box::new(reader));
-        self
-    }
-}
-
-impl Reader for CombinedReader {
-    fn read<'a>(&self, request: &'a dyn RequestInfo) -> SmallVec<[&'a str; 1]> {
-        let mut versions = SmallVec::new();
-
-        for reader in &self.0 {
-            for version in reader.read(request) {
-                if !versions.contains(&version) {
-                    versions.push(version);
-                }
-            }
-        }
-
-        versions
-    }
-
-    fn clone(&self) -> Box<dyn Reader> {
-        Box::new(Clone::clone(self))
-    }
-}
-
-impl parameter::Descriptor for CombinedReader {
-    fn describe<'a>(&'a self, context: &mut dyn parameter::Context<'a>) {
-        for reader in &self.0 {
-            reader.describe(context);
-        }
-    }
-}
-
-impl Clone for CombinedReader {
-    fn clone(&self) -> Self {
-        Self(self.0.iter().map(|r| Reader::clone(&**r)).collect())
-    }
-}
-
-impl From<CombinedReader> for Box<dyn Reader> {
-    fn from(reader: CombinedReader) -> Self {
-        Box::new(reader)
-    }
-}
-
-impl From<CombinedReader> for Box<dyn parameter::Descriptor> {
-    fn from(reader: CombinedReader) -> Self {
-        Box::new(reader)
-    }
-}
-
-/// Combines multiple API version readers into a single reader that aggregates their results.
-///
-/// # Arguments
-///
-/// * `reader` - the API version [reader](Reader) to combine
-pub fn combine(reader: impl Reader + 'static) -> CombinedReader {
-    CombinedReader::new(reader)
-}
-
 #[cfg(test)]
 mod tests {
-    use super::{HeaderReader, QueryStringReader, Reader, combine};
-    use crate::RequestInfo;
+    use super::*;
+    use crate::{RequestInfo, prelude::*};
     use http::{HeaderMap, HeaderName, Uri};
     use rstest::rstest;
 
@@ -157,7 +82,7 @@ mod tests {
         #[case] expected: &[&str],
     ) {
         // arrange
-        let reader = combine(QueryStringReader::default()).with(HeaderReader::many(["x-api-version", "x-ms-version"]));
+        let reader = QueryStringReader::default().combine(HeaderReader::new(["x-api-version", "x-ms-version"]));
         let request = Request::new(uri, headers);
 
         // act
