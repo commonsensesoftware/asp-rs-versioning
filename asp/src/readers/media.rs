@@ -1,4 +1,4 @@
-use super::Reader;
+use super::{IntoNames, Reader};
 use crate::RequestInfo;
 use crate::parameter::{Context, Descriptor, Location::MediaType};
 use http::header::{ACCEPT, CONTENT_TYPE};
@@ -20,6 +20,9 @@ const DEFAULT_WEIGHT: f32 = 1.0;
 /// // matches 'application/json;ver=1.0'
 /// let reader = MediaTypeReader::new("ver");
 ///
+/// // matches 'application/json;v=1.0' or 'application/json;ver=1.0'
+/// let reader = MediaTypeReader::new(["v", "ver"]);
+///
 /// // matches 'application/vnd.1.0'
 /// let reader = MediaTypeReader::template(pattern!(application/vnd.{v}));
 /// ```
@@ -28,7 +31,7 @@ pub struct MediaTypeReader(Matcher);
 
 #[derive(Clone, Debug)]
 enum Matcher {
-    Parameter(Cow<'static, str>),
+    Parameters(SmallVec<[Cow<'static, str>; 1]>),
     Template(fn(&str) -> Option<&str>),
 }
 
@@ -43,9 +46,9 @@ impl MediaTypeReader {
     ///
     /// # Arguments
     ///
-    /// * `name` - the name of the media type parameter to read the API version from
-    pub fn new(name: impl Into<Cow<'static, str>>) -> Self {
-        Self(Matcher::Parameter(name.into()))
+    /// * `names` - one or more media type parameters to read the API version from
+    pub fn new(names: impl IntoNames) -> Self {
+        Self(Matcher::Parameters(names.into_names()))
     }
 
     /// Initializes a new [MediaTypeReader] that matches a template against the media type.
@@ -92,9 +95,9 @@ impl Matcher {
             // media type parameter names are case-insensitive
             if key.eq_ignore_ascii_case("q") {
                 quality = weight(val);
-            } else if let Matcher::Parameter(name) = self
+            } else if let Matcher::Parameters(names) = self
                 && value.is_none()
-                && key.eq_ignore_ascii_case(name)
+                && names.iter().any(|name| key.eq_ignore_ascii_case(name))
             {
                 value = Some(val);
             }
@@ -159,13 +162,15 @@ impl Reader for MediaTypeReader {
 
 impl Descriptor for MediaTypeReader {
     fn describe<'a>(&'a self, context: &mut dyn Context<'a>) {
-        let name = if let Matcher::Parameter(name) = &self.0 {
-            name
-        } else {
-            ""
-        };
-
-        context.register(name, MediaType);
+        match &self.0 {
+            Matcher::Parameters(names) => {
+                for name in names {
+                    context.register(name, MediaType);
+                }
+            }
+            // a template has no parameter name
+            Matcher::Template(_) => context.register("", MediaType),
+        }
     }
 }
 
@@ -359,6 +364,8 @@ mod tests {
     #[case(MediaTypeReader::default(), &[(CONTENT_TYPE, "v=1.0")], &[])]
     #[case(MediaTypeReader::default(), &[(CONTENT_TYPE, "application/json;V=1.0")], &["1.0"])]
     #[case(MediaTypeReader::new("Ver"), &[(ACCEPT, "application/json;vER=1.0")], &["1.0"])]
+    #[case(MediaTypeReader::new(["v", "ver"]), &[(CONTENT_TYPE, "application/json;ver=1.0")], &["1.0"])]
+    #[case(MediaTypeReader::new(["v", "ver"]), &[(ACCEPT, "application/json;v=1.0, text/plain;ver=2.0")], &["1.0", "2.0"])]
     #[case(MediaTypeReader::default(), &[(ACCEPT, "application/json;v=1.0;Q=0.5, text/plain;v=2.0")], &["2.0"])]
     #[case(
         MediaTypeReader::template(pattern!(application/vnd.{v})),

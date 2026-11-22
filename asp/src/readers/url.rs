@@ -1,4 +1,4 @@
-use super::Reader;
+use super::{IntoNames, Reader};
 use crate::RequestInfo;
 use crate::parameter::{Context, Descriptor, Location::Path};
 use smallvec::{SmallVec, smallvec};
@@ -37,23 +37,9 @@ impl UrlReader {
     ///
     /// # Arguments
     ///
-    /// * `name` - the route parameter to read the API version from
-    pub fn new(name: impl Into<Cow<'static, str>>) -> Self {
-        Self(smallvec![name.into()])
-    }
-
-    /// Initializes a new [UrlReader].
-    ///
-    /// # Arguments
-    ///
-    /// * `names` - the sequence of route parameters to read the API version from
-    pub fn many(names: impl IntoIterator<Item = impl Into<Cow<'static, str>>>) -> Self {
-        Self(
-            names
-                .into_iter()
-                .map(Into::into)
-                .collect::<SmallVec<[Cow<'static, str>; 1]>>(),
-        )
+    /// * `names` - one or more route parameters to read the API version from
+    pub fn new(names: impl IntoNames) -> Self {
+        Self(names.into_names())
     }
 }
 
@@ -112,8 +98,8 @@ mod tests {
     #[case(UrlReader::default(), &[], &[])]
     #[case(UrlReader::new("ver"), &[("ver", "1.0")], &["1.0"])]
     #[case(UrlReader::new("ver"), &[("api_version", "1.0")], &[])]
-    #[case(UrlReader::many(["ver", "v"]), &[("v", "1.0")], &["1.0"])]
-    #[case(UrlReader::many(["ver", "v"]), &[("v", "1.0"), ("ver", "2.0")], &["2.0", "1.0"])]
+    #[case(UrlReader::new(["ver", "v"]), &[("v", "1.0")], &["1.0"])]
+    #[case(UrlReader::new(["ver", "v"]), &[("v", "1.0"), ("ver", "2.0")], &["2.0", "1.0"])]
     fn read_should_return_route_parameter_values(
         #[case] reader: UrlReader,
         #[case] parameters: &'static [(&'static str, &'static str)],

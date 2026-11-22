@@ -1,10 +1,12 @@
 mod header;
 mod media;
+mod names;
 mod query;
 mod url;
 
 pub use header::HeaderReader;
 pub use media::MediaTypeReader;
+pub use names::IntoNames;
 pub use url::UrlReader;
 
 #[doc(hidden)]

@@ -1,4 +1,4 @@
-use super::Reader;
+use super::{IntoNames, Reader};
 use crate::RequestInfo;
 use crate::parameter::{Context, Descriptor, Location::Query};
 use smallvec::{SmallVec, smallvec};
@@ -19,23 +19,9 @@ impl QueryStringReader {
     ///
     /// # Arguments
     ///
-    /// * `name` - the query string parameter to read the API version from
-    pub fn new(name: impl Into<Cow<'static, str>>) -> Self {
-        Self(smallvec![name.into()])
-    }
-
-    /// Initializes a new [QueryStringReader].
-    ///
-    /// # Arguments
-    ///
-    /// * `names` - the sequence of query string parameters to read the API version from
-    pub fn many(names: impl IntoIterator<Item = impl Into<Cow<'static, str>>>) -> Self {
-        Self(
-            names
-                .into_iter()
-                .map(Into::into)
-                .collect::<SmallVec<[Cow<'static, str>; 1]>>(),
-        )
+    /// * `names` - one or more query string parameters to read the API version from
+    pub fn new(names: impl IntoNames) -> Self {
+        Self(names.into_names())
     }
 }
 
@@ -101,9 +87,9 @@ mod tests {
     #[case(QueryStringReader::new("ver"), "/test?ver=1.0", &["1.0"])]
     #[case(QueryStringReader::new("ver"), "/test?api-version=1.0", &[])]
     #[case(QueryStringReader::new("Ver"), "/test?vER=1.0", &["1.0"])]
-    #[case(QueryStringReader::many(["api-version", "v"]), "/test?v=1.0", &["1.0"])]
-    #[case(QueryStringReader::many(["api-version", "v"]), "/test?api-version=1.0&v=2.0", &["1.0", "2.0"])]
-    #[case(QueryStringReader::many(["Api-Version", "V"]), "/test?API-VERSION=1.0&v=2.0", &["1.0", "2.0"])]
+    #[case(QueryStringReader::new(["api-version", "v"]), "/test?v=1.0", &["1.0"])]
+    #[case(QueryStringReader::new(["api-version", "v"]), "/test?api-version=1.0&v=2.0", &["1.0", "2.0"])]
+    #[case(QueryStringReader::new(["Api-Version", "V"]), "/test?API-VERSION=1.0&v=2.0", &["1.0", "2.0"])]
     fn read_should_return_matched_versions(
         #[case] reader: QueryStringReader,
         #[case] uri: &'static str,

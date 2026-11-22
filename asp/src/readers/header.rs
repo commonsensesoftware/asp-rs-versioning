@@ -1,7 +1,7 @@
-use super::Reader;
+use super::{IntoNames, Reader};
 use crate::RequestInfo;
 use crate::parameter::{Context, Descriptor, Location::Header};
-use smallvec::{SmallVec, smallvec};
+use smallvec::SmallVec;
 use std::borrow::Cow;
 
 /// Represents an API version reader that reads the value from a HTTP header.
@@ -13,23 +13,9 @@ impl HeaderReader {
     ///
     /// # Arguments
     ///
-    /// * `name` - the HTTP header name to read the API version from
-    pub fn new(version: impl Into<Cow<'static, str>>) -> Self {
-        Self(smallvec![version.into()])
-    }
-
-    /// Initializes a new [HeaderReader].
-    ///
-    /// # Arguments
-    ///
-    /// * `names` - the sequence of HTTP header names to read the API version from
-    pub fn many(names: impl IntoIterator<Item = impl Into<Cow<'static, str>>>) -> Self {
-        Self(
-            names
-                .into_iter()
-                .map(Into::into)
-                .collect::<SmallVec<[Cow<'static, str>; 1]>>(),
-        )
+    /// * `names` - one or more HTTP header names to read the API version from
+    pub fn new(names: impl IntoNames) -> Self {
+        Self(names.into_names())
     }
 }
 
@@ -96,13 +82,13 @@ mod tests {
     #[case(HeaderReader::new("api-version"), &[], &[])]
     #[case(HeaderReader::new("API-Version"), &[("api-version", "1.0")], &["1.0"])]
     #[case(HeaderReader::new("X-API-VERSION"), &[("x-api-version", "2.0")], &["2.0"])]
-    #[case(HeaderReader::many(["api-version", "x-ms-version"]), &[("x-ms-version", "2.0")], &["2.0"])]
+    #[case(HeaderReader::new(["api-version", "x-ms-version"]), &[("x-ms-version", "2.0")], &["2.0"])]
     #[case(
-        HeaderReader::many(["api-version", "x-ms-version"]),
+        HeaderReader::new(["api-version", "x-ms-version"]),
         &[("api-version", "1.0"), ("x-ms-version", "2.0")],
         &["1.0", "2.0"]
     )]
-    #[case(HeaderReader::many(["Api-Version", "X-MS-Version"]), &[("x-ms-version", "2.0")], &["2.0"])]
+    #[case(HeaderReader::new(["Api-Version", "X-MS-Version"]), &[("x-ms-version", "2.0")], &["2.0"])]
     fn read_should_return_matched_versions(
         #[case] reader: HeaderReader,
         #[case] headers: &[(&'static str, &'static str)],
