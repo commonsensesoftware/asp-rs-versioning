@@ -14,7 +14,10 @@ to learn any new routing concepts or change the way you implement your services 
 You may be looking for:
 
 - [User Guide](https://commonsensesoftware.github.io/asp-rs-versioning)
-- [API Documentation](https://docs.rs/api-versioning)
+- API Documentation
+  - [API Versioning](https://docs.rs/api-versioning)
+  - [API Versioning with Axum](https://docs.rs/api-versioning-axum)
+  - [API Versioning with Utoipa](https://docs.rs/api-versioning-utoipa)
 - [Release Notes](https://github.com/commonsensesoftware/asp-rs-versioning/releases)
 
 The supported flavors are:
