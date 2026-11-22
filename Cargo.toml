@@ -5,7 +5,7 @@ resolver = "3"
 
 [workspace.package]
 version = "0.1.0"
-authors = ["Chris Martinez <chris.s.martinez@outlook.com>"]
+authors = ["Chris Martinez <api-versioning@outlook.com>"]
 license = "MIT"
 repository = "https://github.com/commonsensesoftware/asp-rs-versioning"
 edition = "2024"
