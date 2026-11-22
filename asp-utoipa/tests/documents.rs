@@ -438,6 +438,128 @@ fn documents_should_add_version_parameter_for_url_segment_when_not_substituted()
     assert_eq!(v1["paths"]["/orders"]["post"]["parameters"][0]["in"], "query");
 }
 
+mod declared {
+    #[utoipa::path(get, path = "", params(("api-version" = String, Query, description = "Declared")), responses((status = 200)))]
+    pub async fn query() {}
+
+    #[utoipa::path(get, path = "", params(("X-API-Version" = String, Header, description = "Declared")), responses((status = 200)))]
+    pub async fn header() {}
+
+    #[utoipa::path(get, path = "", params(("api_version" = String, Path, description = "Declared")), responses((status = 200)))]
+    pub async fn path() {}
+}
+
+#[test]
+fn documents_should_add_version_parameters_with_configured_description() {
+    // arrange
+    let apis = url_apis(Options::default());
+    let options = DocumentOptions {
+        substitute_api_version_in_url: false,
+        api_version_parameter_description: "The API version",
+        ..Default::default()
+    };
+
+    // act
+    let documents = documents_with(&apis, base("Orders"), &options);
+
+    // assert
+    let v1 = json(&documents[0]);
+    assert_eq!(
+        v1["paths"]["/v{api_version}/orders/{id}"]["get"]["parameters"][0]["description"],
+        "The API version"
+    );
+    assert_eq!(
+        v1["paths"]["/orders"]["post"]["parameters"][0]["description"],
+        "The API version"
+    );
+}
+
+#[test]
+fn documents_should_retain_declared_description_of_query_string_parameter() {
+    // arrange
+    let (_, apis): (axum::Router, _) = Router::new(Options::default())
+        .api("/orders", |api| {
+            api.has(api_version!(1.0)).route("/", |e| e.get(doc!(declared::query)))
+        })
+        .split();
+
+    // act
+    let documents = documents(&apis, base("Orders"));
+
+    // assert
+    assert_eq!(
+        json(&documents[0])["paths"]["/orders"]["get"]["parameters"],
+        json!([{
+            "name": "api-version",
+            "in": "query",
+            "description": "Declared",
+            "required": true,
+            "schema": { "type": "string", "enum": ["1.0"] }
+        }])
+    );
+}
+
+#[test]
+fn documents_should_retain_declared_description_of_header_parameter_with_different_case() {
+    // arrange
+    let (_, apis): (axum::Router, _) = Router::new(Options {
+        reader: Box::new(HeaderReader::new("x-api-version")),
+        ..Default::default()
+    })
+    .api("/orders", |api| {
+        api.has(api_version!(1.0)).route("/", |e| e.get(doc!(declared::header)))
+    })
+    .split();
+
+    // act
+    let documents = documents(&apis, base("Orders"));
+
+    // assert
+    assert_eq!(
+        json(&documents[0])["paths"]["/orders"]["get"]["parameters"],
+        json!([{
+            "name": "X-API-Version",
+            "in": "header",
+            "description": "Declared",
+            "required": true,
+            "schema": { "type": "string", "enum": ["1.0"] }
+        }])
+    );
+}
+
+#[test]
+fn documents_should_retain_declared_description_of_url_segment_parameter_when_not_substituted() {
+    // arrange
+    let (_, apis): (axum::Router, _) = Router::new(Options {
+        reader: Box::new(UrlReader::default()),
+        ..Default::default()
+    })
+    .api("/v{api_version}/orders", |api| {
+        api.has(api_version!(1.0)).route("/", |e| e.get(doc!(declared::path)))
+    })
+    .split();
+    let options = DocumentOptions {
+        substitute_api_version_in_url: false,
+        api_version_parameter_description: "Configured",
+        ..Default::default()
+    };
+
+    // act
+    let documents = documents_with(&apis, base("Orders"), &options);
+
+    // assert
+    assert_eq!(
+        json(&documents[0])["paths"]["/v{api_version}/orders"]["get"]["parameters"],
+        json!([{
+            "name": "api_version",
+            "in": "path",
+            "description": "Declared",
+            "required": true,
+            "schema": { "type": "string", "enum": ["1.0"] }
+        }])
+    );
+}
+
 #[rstest]
 #[case(api_version!(1.0), "/v1/orders/{id}")]
 #[case(api_version!(1.1), "/v1.1/orders/{id}")]

@@ -29,6 +29,13 @@ pub struct DocumentOptions {
     /// A version-neutral operation does not require an API version, so the API version parameters are optional.
     pub add_api_version_parameters_when_version_neutral: bool,
 
+    /// Gets or sets the description of an API version parameter. The default value is `The requested API version`.
+    ///
+    /// The description is only applied to a parameter without one, so a description declared for the parameter of an
+    /// operation, such as through `#[utoipa::path(params(...))]`, is retained. A description that is not known until
+    /// runtime, such as one read from configuration, can be provided once at startup with [String::leak].
+    pub api_version_parameter_description: &'static str,
+
     /// Gets or sets a value indicating whether the links of deprecation and sunset policies are hidden from the
     /// description of a document. The default value is `false`.
     ///
@@ -55,6 +62,7 @@ impl Default for DocumentOptions {
         Self {
             substitute_api_version_in_url: true,
             add_api_version_parameters_when_version_neutral: false,
+            api_version_parameter_description: "The requested API version",
             hide_policy_links: false,
             deprecation_notice: Box::new(|policy: &DeprecationPolicy| {
                 Some(match policy.date() {

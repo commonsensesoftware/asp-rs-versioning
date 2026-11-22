@@ -9,9 +9,6 @@ use utoipa::openapi::{
     schema::{ObjectBuilder, Schema, Type},
 };
 
-/// The description of an API version parameter.
-const DESCRIPTION: &str = "The requested API version";
-
 /// Represents the context that collects the distinct API version parameters registered by a descriptor.
 #[derive(Default)]
 struct Registrations<'a>(Vec<(&'a str, Location)>);
@@ -133,6 +130,7 @@ impl VersionParameters<'_> {
         default: Option<&ApiVersion>,
     ) {
         let required = if required { Required::True } else { Required::False };
+        let description = self.options.api_version_parameter_description;
         let parameters = operation.parameters.get_or_insert_with(Vec::new);
         let existing = parameters.iter_mut().find_map(|parameter| match parameter {
             RefOr::T(parameter) if matches(parameter, name, &parameter_in) => Some(parameter),
@@ -143,13 +141,13 @@ impl VersionParameters<'_> {
             Some(parameter) => {
                 parameter.required = required;
                 parameter.schema = Some(self.schema(default));
-                parameter.description.get_or_insert_with(|| DESCRIPTION.into());
+                parameter.description.get_or_insert_with(|| description.into());
             }
             None => parameters.push(
                 ParameterBuilder::new()
                     .name(name)
                     .parameter_in(parameter_in)
-                    .description(Some(DESCRIPTION))
+                    .description(Some(description))
                     .required(required)
                     .schema(Some(self.schema(default)))
                     .build()
