@@ -41,14 +41,13 @@ pub mod prelude;
 #[cfg(feature = "problem-details")]
 pub mod problem;
 
-mod provider;
-
 /// Contains functionality related to API version readers.
 #[cfg(feature = "http")]
 pub mod readers;
 
 #[cfg(feature = "http")]
 mod reporter;
+
 #[cfg(feature = "http")]
 mod request;
 
@@ -70,13 +69,16 @@ pub use serde as __serde;
 pub use mapping::Mapping;
 pub use metadata::Metadata;
 pub use model::Model;
+
 #[cfg(feature = "http")]
 pub use options::{Options, ReportHeaders, ReportOptions};
-pub use provider::{Provider, ProviderOptions};
+
 #[cfg(feature = "http")]
 pub use reporter::Reporter;
+
 #[cfg(feature = "http")]
 pub use request::RequestInfo;
+
 pub use variadic::Variadic;
 pub use version::{ApiVersion, CustomFormat, Format, ParseError, SetCustomFormatError, builtin, set_custom_format};
 

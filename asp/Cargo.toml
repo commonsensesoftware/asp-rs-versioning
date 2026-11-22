@@ -11,16 +11,14 @@ edition.workspace = true
 
 [features]
 default = ["http", "macros", "problem-details"]
-http = ["dep:headers", "dep:http", "dep:httpdate"]
+http = ["dep:http", "dep:httpdate"]
 macros = ["serde", "dep:api-versioning-macros"]
 serde = ["dep:serde"]
 problem-details = ["dep:serde", "serde/derive", "dep:serde_json"]
 
 [dependencies]
 api-versioning-macros = { path = "../asp-macros", optional = true }
-bitflags.workspace = true
 const_format = { workspace = true, features = ["fmt"] }
-headers = { workspace = true, optional = true }
 http = { workspace = true, optional = true }
 httpdate = { workspace = true, optional = true }
 serde = { workspace = true, optional = true }

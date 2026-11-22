@@ -12,9 +12,7 @@ edition.workspace = true
 [dependencies]
 api-versioning = { path = "../asp" }
 axum.workspace = true
-bitflags.workspace = true
 const_format = { workspace = true, features = ["fmt"] }
-headers.workspace = true
 http.workspace = true
 httpdate.workspace = true
 serde_json.workspace = true
