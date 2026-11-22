@@ -7,11 +7,17 @@ language = "en"
 edition = "2024"
 
 [output.html]
-site-url = "/api-versioning/"
+site-url = "/asp-rs-versioning/"
+no-section-label = true
 git-repository-url = "https://github.com/commonsensesoftware/asp-rs-versioning/tree/main/guide"
 edit-url-template = "https://github.com/commonsensesoftware/asp-rs-versioning/edit/main/guide/{path}"
 default-theme = "Ayu"
 additional-css = ["theme/custom.css"]
+additional-js = ["theme/pagetoc.js"]
+
+[output.html.fold]
+enable = true
+level = 0
 
 [output.html.playground]
 editable = true

@@ -1,11 +1,35 @@
 # Summary
 
 [Introduction](README.md)
+[Getting Started](getting-started.md)
 
-# User Guide
-
-- [Getting Started](getting-started.md)
-
-# Reference Guide
-
-Coming soon
+- [Quick Starts]()
+  - [New Services](quick-starts/new-services.md)
+  - [Existing Services](quick-starts/existing-services.md)
+  - [Version Format](version-format.md)
+  - [Version Discovery](version-discovery.md)
+  - [Version Policies](version-policies.md)
+- [How to Version Your Service](how-to/overview.md)
+  - [Defining a Service Version](how-to/define-service-version.md)
+  - [Query String Versioning](how-to/version-by-query-string.md)
+  - [Media Type Versioning](how-to/version-by-media-type.md)
+  - [Header Versioning](how-to/version-by-header.md)
+  - [URL Path Versioning](how-to/version-by-url.md)
+  - [Version Neutrality](how-to/version-neutral.md)
+  - [Requested API Version](how-to/requested-version.md)
+  - [Existing Services](how-to/existing-services.md)
+  - [Deprecating Versions](how-to/deprecate-version.md)
+  - [Version Advertisement](how-to/version-advertisement.md)
+  - [Versioned Models](how-to/versioned-models.md)
+- [Configuring Your Application](config/overview.md)
+  - [API Versioning Options](config/options.md)
+  - [API Version Reader](config/reader.md)
+  - [API Version Selector](config/selector.md)
+- [Error Responses](errors.md)
+- [API Documentation](docs/overview.md)
+  - [OpenAPI Options](docs/options.md)
+  - [Scalar Integration](docs/scalar.md)
+  - [Swagger UI Integration](docs/swagger_ui.md)
+- [Known Limitations](limitations.md)
+- [FAQ](faq.md)
+- [Examples](examples.md)
