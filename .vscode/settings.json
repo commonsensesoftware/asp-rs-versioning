@@ -1,0 +1,33 @@
+{
+    "[rust]": {
+        "editor.defaultFormatter": "rust-lang.rust-analyzer"
+    },
+    "rust-analyzer.rustfmt.overrideCommand": [
+        "rustup",
+        "run",
+        "nightly",
+        "rustfmt",
+        "--edition",
+        "2024"
+    ],
+    "editor.rulers": [
+        {"column": 120, "color": "#ffcc00"}
+    ],
+    "cSpell.words": [
+        "clippy",
+        "httpdate",
+        "krate",
+        "oneshot",
+        "peekable",
+        "pipefail",
+        "punct",
+        "rstest",
+        "serde",
+        "smallvec",
+        "Swatinem",
+        "thiserror",
+        "unconfigured",
+        "unraw",
+        "utoipa"
+    ],
+}

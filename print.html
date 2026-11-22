@@ -1,0 +1,1916 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>API Versioning Documentation</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+        <!-- Social preview metadata.
+             mdBook injects this file at the "Custom HTML head" marker in its built-in
+             index.hbs. As with footer.js, index.hbs is deliberately NOT overridden --
+             CI installs the latest mdBook every run, so a forked page template would
+             silently drift from upstream.
+        
+             Handlebars context available here: title, book_title, chapter_title,
+             description, path, path_to_root, language, is_index, git_repository_url.
+        
+             Only the page-invariant tags live here. description/og:description,
+             og:url, and canonical are per-page and cannot be expressed in this
+             template -- mdBook registers no string helpers, so print.md (a source .md
+             path) cannot be rewritten into a page URL. tools/Add-PageMetadata.ps1
+             injects those after the build and takes precedence over anything below. -->
+        <meta property="og:type" content="article">
+        <meta property="og:site_name" content="API Versioning Documentation">
+        <meta property="og:title" content="">
+        <meta property="og:locale" content="en">
+        <meta property="og:image" content="https://commonsensesoftware.github.io/asp-rs-versioning/og-image.png">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
+        <meta property="og:image:alt" content="API Versioning Documentation">
+
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="">
+        <meta name="twitter:image" content="https://commonsensesoftware.github.io/asp-rs-versioning/og-image.png">
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon-271ab491.svg">
+        <link rel="shortcut icon" href="favicon-5641e22d.png">
+        <link rel="stylesheet" href="css/variables-8adf115d.css">
+        <link rel="stylesheet" href="css/general-e96d0476.css">
+        <link rel="stylesheet" href="css/chrome-d279d366.css">
+        <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="theme/custom-9d5614a1.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "ayu";
+            window.path_to_searchindex_js = "searchindex-6e1d1433.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc-0c7efbdb.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">API Versioning Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/commonsensesoftware/asp-rs-versioning/tree/main/guide" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
+<p>Versioning is an important aspect of any mature web service. This ensures that clients can rely on services to be stable
+over time, while still enabling service changes and new features. The goal of the API Versioning project is to adhere to
+the REST constraints by default, while using the HTTP stack of your choice; however, are numerous extensions and
+customizations that allow you to version your APIs however you like.</p>
+<h2 id="crates"><a class="header" href="#crates">Crates</a></h2>
+<h3 id="asp-versioning"><a class="header" href="#asp-versioning"><a href="https://crates.io/crates/api-versioning">asp-versioning</a></a></h3>
+<p>The core abstractions provide a common set of traits and types for API versioning across all supported platforms.
+These capabilities can also be used to version your data models.</p>
+<h3 id="asp-versioning-axum"><a class="header" href="#asp-versioning-axum"><a href="https://crates.io/crates/api-versioning-axum">asp-versioning-axum</a></a></h3>
+<p>Everything you need to add service API versioning to your <a href="https://crates.io/crates/axum">axum</a> applications.</p>
+<h3 id="asp-versioning-utoipa"><a class="header" href="#asp-versioning-utoipa"><a href="https://crates.io/crates/api-versioning-utoipa">asp-versioning-utoipa</a></a></h3>
+<p>Every you need to document your services with OpenAPI using <a href="https://crates.io/crates/utoipa">utoipa</a>.</p>
+<h2 id="contributing"><a class="header" href="#contributing">Contributing</a></h2>
+<p><code>asp-rs-versioning</code> is free and open source. You can find the source code on <a href="https://github.com/commonsensesoftware/asp-rs-versioning">GitHub</a> and issues and feature requests
+can be posted on the <a href="https://github.com/commonsensesoftware/asp-rs-versioning/issues">GitHub issue tracker</a>. <code>asp-rs-versioning</code> relies on the community to fix bugs and add features.
+If you’d like to contribute, please read the <a href="https://github.com/commonsensesoftware/asp-rs-versioning/blob/main/CONTRIBUTING.md">CONTRIBUTING</a> guide and consider opening a <a href="https://github.com/commonsensesoftware/asp-rs-versioning/pulls">pull request</a>.</p>
+<h2 id="license"><a class="header" href="#license">License</a></h2>
+<p>This project is licensed under the <a href="https://github.com/commonsensesoftware/asp-rs-versioning/blob/main/LICENSE">MIT</a> license.</p>
+<div style="break-before: page; page-break-before: always;"></div><!-- description: Install API Versioning and stand up a versioned Hello World endpoint in a few lines of code. -->
+<h1 id="getting-started"><a class="header" href="#getting-started">Getting Started</a></h1>
+<p>The simplest way to get started is to install the crate using the default features with <code>axum</code>.</p>
+<pre><code class="language-bash">cargo add api-versioning-axum
+</code></pre>
+<h2 id="example"><a class="header" href="#example">Example</a></h2>
+<p>The following example sets up the ubiquitous “Hello World” service with two versions of the same endpoint. The <code>version</code>
+parameter resolves to the requested API version and echoes it back to illustrate different endpoints were reached.</p>
+<pre><code class="language-rust">use api_versioning::{Options, api_version};
+use api_versioning_axum::{RequestedApiVersion, Router};
+use tokio::net::TcpListener;
+
+// note: specifying RequestedApiVersion is not required, but it provides
+// a way to determine which API version was routed to the handler
+
+// GET /helloworld?api-version=1.0
+async fn hello(requested: RequestedApiVersion) -&gt; String {
+    format!("Hello World! (v{})", requested.version())
+}
+
+// GET /helloworld?api-version=2.0
+async fn hello_v2(requested: RequestedApiVersion) -&gt; String {
+    format!("Hello World! (v{})", requested.version())
+}
+
+#[tokio::main]
+async fn main() -&gt; anyhow::Result&lt;()&gt; {
+    let app: axum::Router = Router::default()
+        .api("/helloworld", |api| {
+            api.has([api_version!(1.0), api_version!(2.0)])
+               .route("/", |e| e.get(hello).map(api_version!(2.0), |h| h.get(hello_v2)))
+        })
+        .into();
+    let listener = TcpListener::bind("127.0.0.1:3000").await?;
+
+    axum::serve(listener, app).await?;
+    Ok(())
+}</code></pre>
+<p>To run the example, use:</p>
+<pre><code class="language-bash">cargo run
+</code></pre>
+<p>and then navigate to the endpoint or use:</p>
+<pre><code class="language-bash">curl https://localhost:3000/helloworld?api-version=1.0
+</code></pre>
+<pre><code class="language-bash">curl https://localhost:3000/helloworld?api-version=2.0
+</code></pre>
+<p>The repository [examples] demonstrate additional features and capabilities.</p>
+<div style="break-before: page; page-break-before: always;"></div><!-- description: Set up API versioning in a new service. -->
+<h1 id="new-services"><a class="header" href="#new-services">New Services</a></h1>
+<p>When a service author creates new services that consider API versioning upfront, then the configuration and setup is
+very straightforward. The following examples provide a quick start setup with default configurations.</p>
+<pre><code class="language-rust">use api_versioning::api_version;
+use api_versioning_axum::Router;
+use tokio::net::TcpListener;
+
+#[tokio::main]
+async fn main() -&gt; anyhow::Result&lt;()&gt; {
+    let app: axum::Router = Router::default()
+        .api("/people", |api| {
+            api.has(api_version!(1.0))
+               .route("/", |e| e.get(|| async {}))
+        })
+        .into();
+    let listener = TcpListener::bind("127.0.0.1:3000").await?;
+
+    axum::serve(listener, app).await?;
+    Ok(())
+}</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><!-- description: Retrofit API versioning onto a service already in production without breaking clients. -->
+<h1 id="existing-services"><a class="header" href="#existing-services">Existing Services</a></h1>
+<p>While it’s great to plan for an API versioning story for your services upfront, it’s all too common to need API
+versioning after your services are in production. The API Versioning libraries provide features to help you retrofit
+existing services and integrate formal API versioning without breaking your existing clients.</p>
+<p>Unless a service is API version-neutral, existing services have some logical, yet undefined, API version that is not
+formally declared by the service or known to a client. In order to prevent existing clients from breaking, they must be
+able to make requests to the original URL without specifying any API version information.</p>
+<p>When API versioning is applied, all of the existing services now have an explicit API version on the service side. The
+initial, default API version is <code>1.0</code>, but that can be configured to be a different API version.</p>
+<pre><code class="language-rust">use api_versioning::api_version;
+use api_versioning_axum::Router;
+use tokio::net::TcpListener;
+
+#[tokio::main]
+async fn main() -&gt; anyhow::Result&lt;()&gt; {
+    let mut options = Options::default();
+
+    // allow a client to call you without specifying an api version
+    // since we haven't configured it otherwise, the assumed api version will be 1.0
+    options.assume_default_version_when_unspecified = true;
+
+    let app: axum::Router = Router::new(options)
+        .api("/people", |api| {
+            api.has([api_version!(1.0), api_version!(2.0)])
+               .route("/", |e| e.get(|| async { "v1" }).map(api_version!(2.0), |h| h.get(|| async { "v2" })))
+        })
+        .into();
+    let listener = TcpListener::bind("127.0.0.1:3000").await?;
+
+    axum::serve(listener, app).await?;
+    Ok(())
+}</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><!-- description: The API version syntax: version groups, major and minor numbers, and optional status. -->
+<h1 id="version-format"><a class="header" href="#version-format">Version Format</a></h1>
+<p>Services are versioned using a version group (e.g. date) or major and minor version scheme with an optional status. The
+version format has the following syntax:</p>
+<pre><code class="language-ebnf">letter = "A" | "B" | "C" | "D" | "E" | "F" | "G"
+       | "H" | "I" | "J" | "K" | "L" | "M" | "N"
+       | "O" | "P" | "Q" | "R" | "S" | "T" | "U"
+       | "V" | "W" | "X" | "Y" | "Z" | "a" | "b"
+       | "c" | "d" | "e" | "f" | "g" | "h" | "i"
+       | "j" | "k" | "l" | "m" | "n" | "o" | "p"
+       | "q" | "r" | "s" | "t" | "u" | "v" | "w"
+       | "x" | "y" | "z" ;
+
+positive = "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
+
+digit = "0" | positive ;
+
+day = ( [ "0" ] positive ) | ( "1" | "2" ) digit | ( "3" ( "0" | "1" ) ) ;
+
+month = ( [ "0" ] positive ) | ( "1" ( "0" | "1" | "2" ) ) ;
+
+year = 4 * digit ;
+
+group = year "-" month "-" day ;
+
+version = { digit } [ "." { digit } ] ;
+
+status = letter [ { letter | digit | "." } { letter | digit } ] ;
+
+api-version = ( group | version ) [ "-" status ] ;
+
+</code></pre>
+<p>The version status allows you to provide a condition to a version such as <strong>alpha</strong>, <strong>beta</strong>, <strong>rc</strong>, and
+so on.  While the status is optional, either the version group or the major and minor versions must be specified.</p>
+<h2 id="versioned-request"><a class="header" href="#versioned-request">Versioned Request</a></h2>
+<p>By default, clients must explicitly request the version of a service via the <strong>api-version</strong> query string parameter or
+URL path segment. It is possible to customize this behavior for legacy and other non-compliant services, which will be
+covered in the <strong>Advanced Versioning</strong> topic.</p>
+<blockquote class="blockquote-tag blockquote-tag-note">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p>
+<p>When versioning by URL segment, the <code>v</code> prefix is neither required nor part of the API version.</p>
+</blockquote>
+<h2 id="versioned-request-examples"><a class="header" href="#versioned-request-examples">Versioned Request Examples</a></h2>
+<p>The following outlines examples of various service version formats:</p>
+<ul>
+<li>/api/foo?api-version=1.0</li>
+<li>/api/foo?api-version=2.0-alpha</li>
+<li>/api/foo?api-version=2015-05-01</li>
+<li>/api/v1/foo</li>
+<li>/api/v2.0-alpha/foo</li>
+<li>/api/v2015-05-01/foo</li>
+</ul>
+<h2 id="formatting"><a class="header" href="#formatting">Formatting</a></h2>
+<p><code>ApiVersion</code> supports <code>Display</code>, which round trips back to the original text format. It also support an alternate format
+that omits the minor version for numeric versions when the value is <code>0</code>.</p>
+<pre><code class="language-rust">println!("Welcome to version {:#}", api_version!(1.0));
+println!("Welcome to version {}", api_version!(1.1-beta));
+println!("Welcome to version {}", api_version!(2.0));
+
+// Output: Welcome to version 1
+// Output: Welcome to version 1.1-beta
+// Output: Welcome to version 2.0</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><!-- description: Advertise supported and deprecated API versions from service via response headers. -->
+<h1 id="version-discovery"><a class="header" href="#version-discovery">Version Discovery</a></h1>
+<p>Requiring an explicit service version helps ensure existing clients don’t break, but we also need a way to advertise
+which service versions are currently supported and which versions are deprecated.</p>
+<p>To facilitate this need, services should respond with the <code>api-supported-versions</code> and <code>api-deprecated-versions</code>, which
+are multi-value HTTP headers that indicate the supported and deprecated API versions, respectively. A deprecated version
+is still implemented, but is expected to be permanently removed in six months or more.  When a version is no longer
+supported, it should stop being advertised. Additional information can be provided via <a href="#version-policies">versioning policies</a>.</p>
+<p>Reporting API versions is disabled by default. Service authors can enable this behavior for all services by setting the
+<a href="#report-api-versions">Options::report_versions::enabled</a> to <code>true</code> or scoped to individual services by applying the
+<code>VersionedApi::report_api_versions</code> builder function.</p>
+<p>Service authors might also choose to implement the <code>OPTIONS</code> method so that clients and tooling can interrogate which
+API versions their service supports.</p>
+<h2 id="example-1"><a class="header" href="#example-1">Example</a></h2>
+<pre><code class="language-rust">use api_versioning::api_version;
+use api_versioning_axum::Router;
+use axum::http::{header, StatusCode};
+use axum::response::IntoResponse;
+
+// OPTIONS /api/myservice?api-version=[1.0|2.0|3.0]
+async fn report() -&gt;impl IntoResponse {
+    (
+        StatusCode::NO_CONTENT,
+        [(header::ALLOW, "GET, HEAD, POST, OPTIONS")],
+    )
+}
+
+#[tokio::main]
+async fn main() -&gt; anyhow::Result&lt;()&gt; {
+    let app: axum::Router = Router::default()
+        .api("/api/myservice", |api| {
+            api.has([api_version!(1.0), api_version!(2.0), api_version!(3.0)])
+                .route("/", |e| e.options(report))
+        })
+        .into();
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:3000").await?;
+
+    axum::serve(listener, app).await?;
+    Ok(())
+}</code></pre>
+<pre><code class="language-http">HTTP/2 204
+allow: GET, POST, OPTIONS
+api-supported-versions: 1.0, 2.0, 3.0
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><!-- description: Announce when an API version is deprecated and sunset. -->
+<h1 id="version-policies"><a class="header" href="#version-policies">Version Policies</a></h1>
+<p><a href="#version-discovery">Version discovery</a> supports advertising which API versions are supported and deprecated via the
+<code>api-supported-versions</code> and <code>api-deprecated-versions</code> respectively. A key limitation of this support is that it does
+not indicate when an API version will be deprecated, sunset, nor what the stated policy is.</p>
+<p>Version policies introduce support for <a href="https://www.rfc-editor.org/rfc/rfc9745.html">RFC 9745</a> (Deprecation) and <a href="https://www.rfc-editor.org/rfc/rfc8594.html">RFC 8594</a> (Sunset). These will allow an API version
+to indicate when it will be deprecated via the <code>deprecation</code> header as well as when it will disappear for good via the
+<code>sunset</code> header. These headers do not necessarily apply to all API versions; they will only apply to the API version
+that was requested. The deprecation and sunset policies can include additional information such as a web page or OpenAPI
+document. These additional links will conform to <a href="https://datatracker.ietf.org/doc/html/rfc8288">RFC 8288</a> (Web Linking).</p>
+<p>These capabilities are useful, not only for instrumented clients, but also for tooling. As an example, an API might
+support an <code>OPTIONS</code> request to retrieve this information for tooling:</p>
+<pre><code class="language-http">OPTIONS /weather?api-version=1.0 HTTP/2
+host: localhost
+</code></pre>
+<pre><code class="language-http">HTTP/2 200
+allow: GET, POST, OPTIONS
+api-supported-versions: 1.0, 2.0, 3.0
+api-deprecated-versions: 0.9
+deprecation: @1640995200
+sunset: Thu, 01 Apr 2022 00:00:00 GMT
+link: &lt;policies.html?api-version=1.0&gt;; rel="deprecation"; title="API Policy"; type="text/html"
+link: &lt;policies.html?api-version=1.0&gt;; rel="sunset"; title="API Policy"; type="text/html"
+link: &lt;openapi/v1.json&gt;; rel="openapi"; title="OpenAPI"; type="application/json"
+</code></pre>
+<p>This indicates to a client that the requested API version <code>1.0</code> was deprecated on January 1, 2022 and will sunset on
+April 1, 2022. It also provides links to public documentation that outlines the API versioning policies as well as where
+to locate the OpenAPI document.</p>
+<p>Policies do not have to have a date. The following scenarios are supported:</p>
+<ul>
+<li>Define a policy by API name and version</li>
+<li>Define a policy by API name for any version</li>
+<li>Define a policy by API version for any API</li>
+<li>A sunset policy may have a date</li>
+<li>A sunset policy can have zero or more links</li>
+</ul>
+<p>Supporting a policy with links alone enables advertising a stated policy when you don’t know when an API version might
+actually be deprecated or sunset, which will be common for the current version of an API. If a policy is defined, it
+will be emitted in responses. This service is automatically utilized whenever
+<code>Options::report_versions::enabled</code> is set to <code>true</code> or the <code>VersionedApi::report_api_versions</code> builder function is
+applied.</p>
+<h2 id="configuration"><a class="header" href="#configuration">Configuration</a></h2>
+<p>The configuration is performed via associated policies:</p>
+<pre><code class="language-rust">use api_versioning::Options;
+use std::time::SystemTime;
+use time::macros::datetime;
+
+let mut options = Options::default();
+
+// version 1.0 deprecates 1/1/2022 with a public policy page
+options
+    .policies
+    .deprecate(api_version!(1.0))
+    .as_of(datetime!(2022-01-01 00:00 UTC))
+    .link("https://docs.api.com/policies/deprecation.html")
+    .title("Version Deprecation Policy")
+    .media_type("text/html");
+
+// version 1.0 sunsets 4/1/2022 with a public policy page
+options
+    .policies
+    .sunset(api_version!(1.0))
+    .as_of(datetime!(2022-04-01 00:00 UTC))
+    .link("https://docs.api.com/policies/sunset.html")
+    .title("Version Sunset Policy")
+    .media_type("text/html");
+
+// public policy page for version 2.0 without a sunset date
+options
+    .policies
+    .sunset(api_version!(2.0))
+    .link("https://docs.api.com/policies/sunset.html")
+    .title("Version Sunset Policy")
+    .media_type("text/html");</code></pre>
+<blockquote class="blockquote-tag blockquote-tag-note">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p>
+<p>It should be noted that although links confirm to <a href="https://datatracker.ietf.org/doc/html/rfc8288">RFC 8288</a>, all configurable links are meant to be specific to API
+versioning policies. The provided configuration APIs, therefore, only expose a subset of what is configurable and
+always use a relation type of <code>rel="deprecation"</code> or <code>rel="sunset"</code>.</p>
+</blockquote>
+<h2 id="openapi-integration"><a class="header" href="#openapi-integration">OpenAPI Integration</a></h2>
+<p>The OpenAPI extensions will attach the appropriate <code>DeprecationPolicy</code> or <code>SunsetPolicy</code> to an <code>ApiDescription</code>.</p>
+<p>The provided information can be used in any number of different ways, but would most likely be used in conjunction with
+OpenAPI. There is currently no direct support for a deprecation or sunset policy in OpenAPI, but they are exposed via
+the <code>x-api-versioning</code> OpenAPI extension and directly in the API documentation.</p>
+<p>The <a href="https://crates.io/crates/api-versioning-utoipa">api-versioning-utoipa</a> crate will document these policies in OpenAPI when they are present.</p>
+<div style="break-before: page; page-break-before: always;"></div><!-- description: How API versioning disambiguates overlapping routes. -->
+<h1 id="how-to-version-your-service"><a class="header" href="#how-to-version-your-service">How to Version Your Service</a></h1>
+<p>REST services are implemented in <a href="https://crates.io/crates/axum">axum</a> as an endpoint that maps a route to a handler. To version your service, you
+simply need to declare your endpoints with the appropriate API version information.</p>
+<h2 id="how-it-works"><a class="header" href="#how-it-works">How It Works</a></h2>
+<p>The way that you create and define routes remains unchanged. The key difference is that routes may now overlap. <a href="https://crates.io/crates/axum">axum</a>
+assumes a one-to-one mapping between routes and endpoints, therefore, it considers duplicate routes to be ambiguous. The
+API versioning <code>Router</code> replaces the default implementation and allows endpoints to also be disambiguated by API
+version. Although multiple routes may match a request, they are expected to be distinguishable by API version. If the
+routes cannot be disambiguated, this is likely a developer mistake and the behavior is the same as the default
+implementation.</p>
+<h3 id="example-2"><a class="header" href="#example-2">Example</a></h3>
+<p>The versioned <code>Router</code> groups one or more endpoints that are anchored to a top-level path. You may also add a logical
+API name to the group. The logical API name is typically useful for OpenAPI documentation.</p>
+<pre><code class="language-rust">use api_versioning::api_version;
+use api_versioning_axum::Router;
+
+#[tokio::main]
+async fn main() -&gt; anyhow::Result&lt;()&gt; {
+    let app: axum::Router = Router::default()
+        .api("/people", |api| {
+            api.name("People") // ← provides optional, logical name
+                .has(api_version!(1.0))
+                .route("/", |e| e.get(|| async { }))
+        })
+        .into();
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:3000").await?;
+
+    axum::serve(listener, app).await?;
+    Ok(())
+}</code></pre>
+<h2 id="versioning-methods"><a class="header" href="#versioning-methods">Versioning Methods</a></h2>
+<p>Several API versioning methods are supported out-of-the-box:</p>
+<ul>
+<li><a href="#query-string-versioning">By Query String</a> (default)</li>
+<li><a href="#media-type-versioning">By Media Type</a></li>
+<li><a href="#header-versioning">By Header</a></li>
+<li><a href="#url-path-versioning">By URL Segment</a></li>
+</ul>
+<p>Multiple methods of API versioning can be supported simultaneously. Use the <code>Combine</code> trait from the crate prelude to
+compose two or more <a href="#api-version-reader">Reader</a> implementations together. You can also implement your own method of extracting the
+requested API version using a custom <a href="#api-version-reader">Reader</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div><!-- description: The four ways to version a service: query string, media type, HTTP header, or URL path. -->
+<h1 id="defining-a-service-version"><a class="header" href="#defining-a-service-version">Defining a Service Version</a></h1>
+<p>There are four out-of-the-box supported approaches for versioning a service:</p>
+<ul>
+<li>By query string parameter</li>
+<li>By media type parameter</li>
+<li>By HTTP header</li>
+<li>By URL path segment</li>
+</ul>
+<p>The default method is to use a query string parameter named <strong>api-version</strong>. You can also combine API versioning
+approaches together or define your own custom method of API versioning.</p>
+<div style="break-before: page; page-break-before: always;"></div><!-- description: Version an API with a query string parameter. -->
+<h1 id="query-string-versioning"><a class="header" href="#query-string-versioning">Query String Versioning</a></h1>
+<p>Versioning by a query string parameter is the most convenient and pragmatic method without violating any REST
+constraints. It is, therefore, the recommended and default versioning method. The default configuration defines the
+<strong>api-version</strong> query string parameter.</p>
+<h2 id="example-3"><a class="header" href="#example-3">Example</a></h2>
+<p>The following example updates the configuration to read API versions from a query string parameter.</p>
+<pre><code class="language-rust">use api_versioning::{Options, api_version};
+use api_versioning::readers::QueryStringReader;
+use api_versioning_axum::Router;
+
+async fn hello() -&gt; &amp;'static str {
+    "Hello world!"
+}
+
+async fn hello_v2() -&gt; &amp;'static str {
+    "Hello world! (v2)"
+}
+
+#[tokio::main]
+async fn main() -&gt; anyhow::Result&lt;()&gt; {
+    // note: this is equivalent to Options::default()
+    let options = Options {
+        reader: Box::new(QueryStringReader::new("api-version")),
+        ..Default::default()
+    };
+    let app: axum::Router = Router::new(options)
+        .api("/helloworld", |api| {
+            api.has([api_version!(1.0), api_version!(2.0)])
+               .route("/", |e| e.get(hello).map(api_version!(2.0), |h| h.get(hello_v2)))
+        })
+        .into();
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:3000").await?;
+
+    axum::serve(listener, app).await?;
+    Ok(())
+}</code></pre>
+<p>A request to version 1.0 will route to the <code>hello</code> handler.</p>
+<pre><code class="language-http">GET helloworld?api-version=1.0 HTTP/2
+</code></pre>
+<pre><code class="language-http">HTTP/2 200
+content-type: text/plain
+content-length: 12
+
+Hello world!
+</code></pre>
+<p>A request to version 2.0 will route to the <code>hello_v2</code> handler.</p>
+<pre><code class="language-http">GET helloworld?api-version=2.0 HTTP/2
+</code></pre>
+<pre><code class="language-http">HTTP/2 200
+content-type: text/plain
+content-length: 17
+
+Hello world! (v2)
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><!-- description: Version an API with a media type parameter through content negotiation. -->
+<h1 id="media-type-versioning"><a class="header" href="#media-type-versioning">Media Type Versioning</a></h1>
+<p>Content negotiation is the defined method in REST for reasoning about the content expectations between a client and
+server. The parameters used in media types for content negotiation can contain custom input that can be used to drive
+API versioning.</p>
+<h2 id="example-4"><a class="header" href="#example-4">Example</a></h2>
+<p>The following example updates the configuration to read API versions from a media type.</p>
+<pre><code class="language-rust">use api_versioning::{Options, api_version};
+use api_versioning::readers::MediaTypeReader;
+use api_versioning_axum::Router;
+
+#[tokio::main]
+async fn main() -&gt; anyhow::Result&lt;()&gt; {
+    // note: this is equivalent to MediaTypeReader::default()
+    let options = Options {
+        reader: Box::new(MediaTypeReader::new("v")),
+        ..Default::default()
+    };
+    let app: axum::Router = Router::new(options)
+        .api("/helloworld", |api| {
+            api.has([api_version!(1.0), api_version!(2.0)])
+               .route("/", |e| {
+                 e.get(|| async { "Hello world!" })
+                  .map(api_version!(2.0), |h| h.post(|body: String| body))
+                  
+            })
+        })
+        .into();
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:3000").await?;
+
+    axum::serve(listener, app).await?;
+    Ok(())
+}</code></pre>
+<h2 id="configuration-1"><a class="header" href="#configuration-1">Configuration</a></h2>
+<p>The <code>MediaTypeReader::default()</code> uses the media type parameter name <code>v</code>, but you can specify any name you like. The
+default behavior will require that clients always specify an API version, so service authors will likely want their
+configuration to be:</p>
+<pre><code class="language-rust">use api_versioning::{Options, api_version};
+use api_versioning::readers::MediaTypeReader;
+
+let options = Options {
+    reader: Box::new(MediaTypeReader::default()),
+    assume_default_version_when_unspecified: true,
+    selector: Box::new(CurrentSelector::new(api_version!(1.0))),
+    ..Default::default()
+};</code></pre>
+<p>This will allow clients to request a specific API version by media type, but if they don’t specify anything, they will
+receive the current implementation (e.g. API version). For example:</p>
+<pre><code class="language-http">GET api/helloworld HTTP/2
+</code></pre>
+<p><em>Figure 1: returns the result from API version 2.0 because it’s the current version</em></p>
+<pre><code class="language-http">GET api/helloworld HTTP/2
+accept: text/plain;v=1.0
+</code></pre>
+<p><em>Figure 2: returns the result from API version 1.0</em></p>
+<pre><code class="language-http">POST api/helloworld HTTP/2
+content-type: text/plain;v=2.0
+content-length: 12
+
+Hello there!
+</code></pre>
+<p><em>Figure 3: explicitly posts the content to API version 2.0, even though it would be implicitly matched</em></p>
+<h2 id="multiple-media-types"><a class="header" href="#multiple-media-types">Multiple Media Types</a></h2>
+<p>The <code>MediaTypeReader</code> matches the configured media type parameter of <strong>any</strong> incoming request. This might be undesirable
+if you support multiple media types or there is ambiguity in matching a media type.</p>
+<p>Consider the following request:</p>
+<pre><code class="language-http">GET api/helloworld HTTP/2
+accept: application/json;v=1.0;q=0.8,application/signed-exchange;v=b3;q=0.9
+</code></pre>
+<p>In this scenario, a client has specified multiple media types and they both have the media type parameter <code>v</code>. The
+<code>MediaTypeReader</code> will honor quality (e.g. <code>q</code>) when specified. If multiple media types have the same quality, the first
+one is selected. In this example <code>application/signed-exchange</code> is selected because it has the highest quality. When the
+<code>v</code> parameter is parsed, the value <code>b3</code> is not a valid API version and will return HTTP status code <code>406</code> (Not
+Acceptable).</p>
+<p>Additional capabilities allow building media type matching rules that enable to you configure how you would like things
+to match. You can specify and combine any of the following behaviors:</p>
+<ul>
+<li>Define multiple media type parameters</li>
+<li>Match media types by template</li>
+<li>Disambiguate between multiple API versions</li>
+</ul>
+<h2 id="custom-media-types"><a class="header" href="#custom-media-types">Custom Media Types</a></h2>
+<p>Defining new, custom media types (ex: <code>application/vnd.my.company.1+json</code>) to drive API versioning is another variant of
+this approach that is compliant with the constraints of REST. <code>MediaTypeReader</code> and the <code>pattern!</code> macro provide way
+to support it.</p>
+<p>The most natural approach is to a use a template to match an API version in the media type. The specified template uses
+syntax and matching analogous to route templates.</p>
+<pre><code class="language-rust">use api_versioning::{Options, api_version};
+use api_versioning::readers::{MediaTypeReader, pattern};
+
+let options = Options {
+    reader: Box::new(MediaTypeReader::template(pattern!(application/vnd.my.company.{version}+json))),
+    ..Default::default()
+};</code></pre>
+<p>This allows matching the API version the same way as if it were in a URL segment. All of the same format and parsing
+rules apply. In most cases, this is sufficient; however, the template expects <strong>exactly one</strong> parameter and that will be
+assumed to the API version parameter.</p>
+<pre><code class="language-http">GET api/helloworld HTTP/2
+accept: application/vnd.my.company.v1+json
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><!-- description: Version an API with an arbitrary HTTP request header. -->
+<h1 id="header-versioning"><a class="header" href="#header-versioning">Header Versioning</a></h1>
+<p>While media type negotiation is the defined method in REST for reasoning about the content expectations between a
+client and server, any arbitrary HTTP header can also be used to drive API versioning.</p>
+<h2 id="example-5"><a class="header" href="#example-5">Example</a></h2>
+<p>The following example updates the configuration to read API versions from a custom header.</p>
+<pre><code class="language-rust">use api_versioning::{Options, api_version};
+use api_versioning::readers::HeaderReader;
+use api_versioning_axum::Router;
+
+#[tokio::main]
+async fn main() -&gt; anyhow::Result&lt;()&gt; {
+    let options = Options {
+        reader: Box::new(HeaderReader::new("x-api-version")),
+        ..Default::default()
+    };
+    let app: axum::Router = Router::new(options)
+        .api("/helloworld", |api| {
+            api.has(api_version!(1.0))
+               .route("/", |e| e.get(|| async { "Hello world!" }))
+        })
+        .into();
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:3000").await?;
+
+    axum::serve(listener, app).await?;
+    Ok(())
+}</code></pre>
+<p>This will allow clients to request a specific API version by the custom HTTP header <code>x-api-version</code>. For example:</p>
+<pre><code class="language-http">GET api/helloworld HTTP/2
+x-api-version: 1.0
+</code></pre>
+<pre><code class="language-http">HTTP/2 200
+content-type: text/plain
+content-length: 12
+
+Hello world!
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><!-- description: Version an API by URL path segment. -->
+<h1 id="url-path-versioning"><a class="header" href="#url-path-versioning">URL Path Versioning</a></h1>
+<p>An alternate, but common, method of API versioning is to use a URL path segment. This approach does not allow implicitly
+matching the initial, default API version of a service; therefore, all API versions must be explicitly declared. In
+addition, the API version value specified for the URL segment must still conform to the <a href="#version-format">version format</a>. The <code>v</code> prefix
+is <strong>not</strong> part of the API version, but may be included in route templates if you so desire.</p>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>It is not possible to have a default API version for a URL path segment. This means that setting
+<code>Options::assumed_default_version_when_unspecified</code> is unlikely to have any affect when you use this method of
+versioning. For more information and possible solutions to address this scenario, refer to the <a href="#url-path-segment-1">known limitations</a>.</p>
+</blockquote>
+<h2 id="example-6"><a class="header" href="#example-6">Example</a></h2>
+<p>The following example updates the configuration to read API versions from the URL path.</p>
+<pre><code class="language-rust">use api_versioning::{Options, api_version};
+use api_versioning::readers::UrlReader;
+use api_versioning_axum::Router;
+
+async fn hello() -&gt; &amp;'static str {
+    "Hello world!"
+}
+
+async fn hello_v2() -&gt; &amp;'static str {
+    "Hello world! (v2)"
+}
+
+#[tokio::main]
+async fn main() -&gt; anyhow::Result&lt;()&gt; {
+    // note: this is equivalent to Options::default()
+    let options = Options {
+        reader: Box::new(UrlReader::new("api_version")),
+        ..Default::default()
+    };
+    let app: axum::Router = Router::new(options)
+        .api("/v{api_version}/helloworld", |api| {
+            api.has(api_version!(1.0))
+               .route("/", |e| e.get(hello).map(api_version!(2.0), |h| h.get(hello_v2)))
+        })
+        .into();
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:3000").await?;
+
+    axum::serve(listener, app).await?;
+    Ok(())
+}</code></pre>
+<p>A request to version 1.0 will route to the <code>hello</code> handler.</p>
+<pre><code class="language-http">GET v1/helloworld HTTP/2
+</code></pre>
+<pre><code class="language-http">HTTP/2 200
+content-type: text/plain
+content-length: 12
+
+Hello world!
+</code></pre>
+<p>A request to version 2.0 will route to the <code>hello_v2</code> handler.</p>
+<pre><code class="language-http">GET v2/helloworld HTTP/2
+</code></pre>
+<pre><code class="language-http">HTTP/2 200
+content-type: text/plain
+content-length: 17
+
+Hello world! (v2)
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><!-- description: Make an endpoint accept any API version, or none, for cases such as health checks. -->
+<h1 id="version-neutral"><a class="header" href="#version-neutral">Version-Neutral</a></h1>
+<p>All services should be explicitly versioned. In rare cases, however, you may have a service that is <em>version-neutral</em>.
+A common scenario is a health check service that behaves in the exact same way, regardless of API version. This might
+also apply to a legacy service that doesn’t support API versioning.</p>
+<p>A <em>version-neutral</em> service has the following characteristics:</p>
+<ul>
+<li>Accepts <strong>any</strong> valid API version</li>
+<li>Accepts no API version at all (e.g. unspecified)</li>
+</ul>
+<p>This is an important distinction and why the term <em>version-neutral</em> is used. A <em>version-neutral</em> service accepts any and
+all versions, including none. This behavior can be used to define a service that accepts all API versions or service
+that simply does not care about specific API versions.</p>
+<p>It is not possible to have some versions of a service that are API version-neutral and other versions of the same
+service require an explicit API version.  If the route of an API version-neutral service matches any other service,
+it will result in an ambiguous match (e.g. server error).</p>
+<h2 id="example-7"><a class="header" href="#example-7">Example</a></h2>
+<pre><code class="language-rust">use api_versioning::{Options, api_version};
+use api_versioning::readers::UrlReader;
+use api_versioning_axum::Router;
+
+#[tokio::main]
+async fn main() -&gt; anyhow::Result&lt;()&gt; {
+    let app: axum::Router = Router::default()
+        .api("/api/health/ping", |api| api.route("/", |e| e.neutral(|h| h.get(|| async {}))))
+        .into();
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:3000").await?;
+
+    axum::serve(listener, app).await?;
+    Ok(())
+}</code></pre>
+<p>A version-neutral endpoint using the query string method will not require that a client specify an API version. A
+version-neutral endpoint using the URL path method will match any well-formed API version in the URL path segment.</p>
+<p>While a version-neutral endpoint doesn’t require an API version, it can only match versions that are defined. In an
+actual application, there would be at least one defined API version. If all endpoints were version-neutral, then there
+is no point to API versioning.</p>
+<pre><code class="language-rust">use api_versioning::{ApiVersion, Options, api_version};
+use api_versioning::readers::UrlReader;
+use api_versioning_axum::Router;
+use axum::extract::Pat;
+
+#[tokio::main]
+async fn main() -&gt; anyhow::Result&lt;()&gt; {
+    let app: axum::Router = Router::default()
+        .api("/api/v{api_version}/health/ping", |api| {
+            api.has(api_version!(1.0))
+               .route("/", |e| e.neutral(|h| h.get(|Path(_): Path&lt;ApiVersion&lt;'static&gt;&gt;| async {})))
+        })
+        .into();
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:3000").await?;
+
+    axum::serve(listener, app).await?;
+    Ok(())
+}</code></pre>
+<pre><code class="language-http">GET api/health/ping HTTP/2
+</code></pre>
+<p><em>Figure 1: a request without a query parameter</em></p>
+<pre><code class="language-http">GET api/health/ping?api-version=1.0 HTTP/2
+</code></pre>
+<p><em>Figure 2: a request with a query parameter</em></p>
+<pre><code class="language-http">GET api/v1/health/ping HTTP/2
+</code></pre>
+<p><em>Figure 3: a request with the version in the URL</em></p>
+<p>All requests will return the same result.</p>
+<pre><code class="language-http">HTTP/2 204
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><!-- description: Read the API version a client requested in a handler. -->
+<h1 id="requested-api-version"><a class="header" href="#requested-api-version">Requested API Version</a></h1>
+<p>All of the service API version information is accessible via extensions. A handler can receive the entire endpoint
+<code>Metadata</code> or the <code>RequestedApiVersion</code>, which will contain the raw, unparsed text and the parsed, valid <code>ApiVersion</code>.
+These features allow you to determine which API version was requested by a client as well as determine which versions
+are supported and deprecated. The API versions provided are automatically aggregated across all service implementations.</p>
+<p>The most common usage is the current, client requested API version:</p>
+<pre><code class="language-rust">use api_versioning::api_version;
+use api_versioning_axum::{RequestedApiVersion, Router};
+use tokio::net::TcpListener;
+
+#[tokio::main]
+async fn main() -&gt; anyhow::Result&lt;()&gt; {
+    let app: axum::Router = Router::default()
+        .api("/example", |api| {
+            api.has([api_version!(1.0), api_version!(2.0)])
+               .route("/", |e| {
+                    e.get(|requested: RequestedApiVersion| async {
+                        requested.raw().unwrap_or_default().into()
+                    })
+                })
+        })
+        .into();
+    let listener = TcpListener::bind("127.0.0.1:3000").await?;
+
+    axum::serve(listener, app).await?;
+    Ok(())
+}</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><!-- description: Add API versioning to a service without breaking clients that never sent a version. -->
+<h1 id="existing-services-1"><a class="header" href="#existing-services-1">Existing Services</a></h1>
+<p>It’s a fairly common scenario that services are released to production and, at some point in the future, it becomes
+evident that service versioning is needed. The question now becomes, <em>“How do I add API versioning without breaking
+existing clients?”</em></p>
+<p>Before API versioning was applied to your service, clients were already bound to some version of the service; they just
+don’t know which version. A client in this situation doesn’t have any flexibility to go backward. If the service
+changes, hopefully that carries forward without breaking any clients. When you’re ready to introduce formal API
+versioning semantics into your service, then any previously unversioned services snap to a single, default API version.</p>
+<h2 id="enable-backward-compatibility"><a class="header" href="#enable-backward-compatibility">Enable Backward Compatibility</a></h2>
+<p>The default API versioning semantics require that all clients explicitly request an API version for a service. This
+would break backward compatibility with existing clients, so we need a way to address this. The <a href="#api-versioning-options">API versioning options</a>
+provide a way to change the default behaviors that will enable supporting services that don’t explicitly declare API
+versions.</p>
+<p>The bare minimum requirement to enable backward compatibility is to assume the default API version when a client does
+not explicitly request an API version. This will allow a client to continue making requests to existing services without
+providing API version information. Clients wishing to upgrade to new versions of a service must begin
+explicitly specifying an API version.</p>
+<pre><code class="language-rust">use api_versioning::Options;
+
+let mut options = Options::default();
+
+options.assume_default_version_when_unspecified = true;</code></pre>
+<p>The assumed API version is <code>1.0</code> by default. From a client’s perspective, the default API version is inconsequential. As
+a service author, however, you may want to choose a different default API version so that it aligns with your overall
+API versioning scheme and instrumentation requirements.</p>
+<pre><code class="language-rust">use api_versioning::{Options, api_version};
+
+let options = Options {
+    assume_default_version_when_unspecified: true,
+    default_version: api_version!(2016-07-01),
+    ..Default::default()
+};</code></pre>
+<p>If these basic configuration settings are still insufficient for your needs, then you will need to use or create an
+<a href="#api-version-selector">API version selector</a> and register it in the <a href="#api-versioning-options">API versioning options</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div><!-- description: Mark an API version deprecated to advertise that it will become unsupported. -->
+<h1 id="deprecating-versions"><a class="header" href="#deprecating-versions">Deprecating Versions</a></h1>
+<p>When a service supports multiple API versions, some versions will eventually be deprecated over time. To advertise that
+one or more API versions have been deprecated, simply declare the deprecated API versions with <code>deprecates</code>. A
+deprecated API version does not mean the API version is not supported. A deprecated API version means that the version
+will become unsupported after six months or more.</p>
+<p>The following examples illustrate how to specify deprecated API versions depending on which service API versioning
+approach you selected.</p>
+<p>This example demonstrates API versioning using all non-URL segment methods.</p>
+<pre><code class="language-rust">use api_versioning::api_version;
+use api_versioning_axum::Router;
+use tokio::net::TcpListener;
+
+#[tokio::main]
+async fn main() -&gt; anyhow::Result&lt;()&gt; {
+    let app: axum::Router = Router::default()
+        .api("/api/helloworld", |api| {
+            api.deprecates(api_version!(1.0))
+               .has(api_version!(2.0))
+               .route("/", |e| {
+                    e.get(|| async { "Hello world!" })
+                     .map(api_version!(2.0), |h| h.get(|| async { "Hello world v2.0!" }))
+                })
+        })
+        .into();
+    let listener = TcpListener::bind("127.0.0.1:3000").await?;
+
+    axum::serve(listener, app).await?;
+    Ok(())
+}</code></pre>
+<p>This example demonstrates API versioning using the URL segment method.</p>
+<pre><code class="language-rust">use api_versioning::api_version;
+use api_versioning_axum::Router;
+use axum::extract::Path;
+use tokio::net::TcpListener;
+
+#[tokio::main]
+async fn main() -&gt; anyhow::Result&lt;()&gt; {
+    let app: axum::Router = Router::default()
+        .api("/api/v{api_version}/helloworld", |api| {
+            api.deprecates(api_version!(1.0))
+               .has(api_version!(2.0))
+               .route("/", |e| {
+                    e.get(|Path(_): Path&lt;ApiVersion&lt;'static&gt;&gt;| async { "Hello world!" })
+                     .map(api_version!(2.0), |h| {
+                        h.get(|Path(_): Path&lt;ApiVersion&lt;'static&gt;&gt;| async { "Hello world v2.0!" })
+                     })
+                })
+        })
+        .into();
+    let listener = TcpListener::bind("127.0.0.1:3000").await?;
+
+    axum::serve(listener, app).await?;
+    Ok(())
+}</code></pre>
+<h2 id="removing-a-service"><a class="header" href="#removing-a-service">Removing a Service</a></h2>
+<p>To permanently sunset a service, simply remove that route or API version from your implementation. The route will
+no longer be matched. When one or more specific API versions cannot be matched, clients will receive HTTP status code
+<code>400</code> (Bad Request). If no candidate routes match at all, clients will receive HTTP status code <code>404</code> (Not Found).</p>
+<div style="break-before: page; page-break-before: always;"></div><!-- description: Aggregate and advertise API versions that are split across deployments behind a gateway. -->
+<h1 id="version-advertisement"><a class="header" href="#version-advertisement">Version Advertisement</a></h1>
+<p>Splitting implemented service API versions across hosted applications or endpoints is a fairly common scenario. There
+are several reasons why you might choose to split hosted endpoints, such as different run-time versions or traffic load
+balancing.</p>
+<p>When service API versions are split across deployments, two issues arise:</p>
+<ol>
+<li>The correct service API version cannot be selected across deployments.</li>
+<li>The set of implemented service API versions cannot be aggregated across deployments.</li>
+</ol>
+<h2 id="service-gateway"><a class="header" href="#service-gateway">Service Gateway</a></h2>
+<p>The first issue can be remedied by a using a service gateway.  The gateway becomes responsible for obfuscating which
+endpoints host which API versions. The exact method in which gateways implement this functionality is at the discretion
+of service authors.</p>
+<h2 id="service-api-version-advertisement"><a class="header" href="#service-api-version-advertisement">Service API Version Advertisement</a></h2>
+<p>Since there is no direct way to know or interrogate the available API version information at runtime in a performant
+manner when services are deployed separately, an alternate approach is required. This concept is referred to as
+<em>service API version advertisement</em>. Each service will advertise the supported and deprecated API versions it knows
+about.</p>
+<p>A service can advertise its supported and deprecated API versions, except they are never considered for routing. The
+advertised and implemented API versions are always aggregated together.</p>
+<p>The following is an example of a service with API version <code>2.0</code> hosted at another endpoint that knows that API version
+<code>1.0</code> is a supported version somewhere else:</p>
+<pre><code class="language-rust">use api_versioning::api_version;
+use api_versioning_axum::{RequestedApiVersion, Router};
+use tokio::net::TcpListener;
+
+#[tokio::main]
+async fn main() -&gt; anyhow::Result&lt;()&gt; {
+    let app: axum::Router = Router::default()
+        .api("/helloworld", |api| {
+            api.has(api_version!(2.0))
+               .advertises(api_version!(1.0))
+               .route("/", |e| e.get(|| async { "Hello world v2.0!" }))
+        })
+        .into();
+    let listener = TcpListener::bind("127.0.0.1:3000").await?;
+
+    axum::serve(listener, app).await?;
+    Ok(())
+}</code></pre>
+<p>This service implementation will now advertise that API version <code>1.0</code> and <code>2.0</code> are supported through the
+<code>api-supported-versions</code> HTTP header even though it has no knowledge about where API version <code>1.0</code> is. In a similar
+fashion, a service can also advertise deprecated API versions using <code>advertises_deprecated</code>. Note that the
+<a href="#report-api-versions">Options::report_versions</a> must be enabled for the HTTP headers to be returned in responses.</p>
+<p>The only drawback to this approach is that each implementation needs to be updated with the supported and deprecated API
+versions when new API versions are released. One possible solution to this limitation is to populate the advertised API
+versions from a configuration source such as a file or database. If this is still undesirable, then there is still the
+option of using HTTP header injection by the host server or another mechanism to send the supported and deprecated API
+version information.</p>
+<div style="break-before: page; page-break-before: always;"></div><!-- description: Use #[visible_in_version] to control which API versions a model appears in. -->
+<h1 id="versioned-models"><a class="header" href="#versioned-models">Versioned Models</a></h1>
+<p>When an API is versioned, it is often necessary to version the models that are used in the API. This is especially true
+when shared models are used in request and response messages.</p>
+<p>The <code>#[visible_in_version]</code> attribute macro can be used to indicate which API versions a model is visible in. Each field
+applies the <code>#[range]</code> attribute with a range of API versions to indicate which API versions the field is included.
+When no attribute is applied, the field is visible in all APIs.</p>
+<p>Consider the following model:</p>
+<pre><code class="language-rust">use api_versioning::visible_in_version;
+use serde::{Deserialize, Serialize};
+
+#[visible_in_version]
+#[derive(Default, Deserialize, Serialize, ToSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct Person {
+    #[serde(default)]
+    pub id: u32,
+
+    pub first_name: String,
+
+    #[range(2.0..)]
+    pub middle_name: String,
+
+    pub last_name: String,
+
+    #[range(2.0..)]
+    pub email: String,
+
+    #[range(3.0..)]
+    pub phone: String,
+}</code></pre>
+<p>The <code>Person</code> model indicates that:</p>
+<ul>
+<li><code>id</code>, <code>first_name</code>, and <code>last_name</code> are visible in all API versions</li>
+<li><code>middle_name</code> and <code>email</code> are only visible starting in API version <code>2.0</code></li>
+<li><code>phone</code> is only visible starting in API version <code>3.0</code></li>
+</ul>
+<p>Each value passed to the <code>[range]</code> attribute is a <code>Range</code> expression representing the lower and upper <code>Bounds</code> of the
+range. The rule is parsed into a range that determines if the annotated field applies to an API version. Annotations
+never define any API versions.</p>
+<p>In rare cases, you might need a split range. The <code>#[range]</code> attribute supports multiple entries; for example:</p>
+<pre><code class="language-rust">use api_versioning::visible_in_version;
+use serde::{Deserialize, Serialize};
+
+#[visible_in_version]
+#[derive(Default, Deserialize, Serialize, ToSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct ExperimentalSettings {
+    #[range(..2.0, 2.1..)]
+    enabled: bool
+}</code></pre>
+<p>These rules would express that <code>enabled</code> is included in every API version <strong>except</strong> <code>2.0</code>.</p>
+<h2 id="validation"><a class="header" href="#validation">Validation</a></h2>
+<p>When a versioned API receives a request the deserialization process will enforce that a client did not <em>over-post</em>
+more data than is allowed for the requested API version, even if the backing model defines the corresponding field.
+If a client attempts to post data that is not visible in the requested API version, the request will be rejected with
+HTTP status code <code>400</code> (Bad Request). The response body will indicate which properties were not visible in the
+requested API version. This is the same behavior as if the property did not exist on the model at all.</p>
+<h2 id="openapi"><a class="header" href="#openapi">OpenAPI</a></h2>
+<p>The OpenAPI extensions will leverage this information to generate version-specific OpenAPI documents with constrained
+model fields. A client will not be able to tell whether you used a single model behind the scenes or many. From their
+perspective, each model will appear to be unique with its own affinity the API version that defined it.</p>
+<div style="break-before: page; page-break-before: always;"></div><!-- description: Configure API versioning. -->
+<h1 id="configuring-your-application"><a class="header" href="#configuring-your-application">Configuring Your Application</a></h1>
+<p>Careful consideration was taken to make the API versioning configuration defaults sensible and as simple as possible. In
+most cases, you do not need to configure anything and <code>Options::default()</code> will suffice.</p>
+<p>The two most common configuration changes are updating the <code>Selector</code> and enable reporting API versions, which is
+disabled by default. The default <code>Selector</code> configuration combines the <code>QueryStringReader</code> and <code>UrlReader</code> to match
+the most common versioning methods. Aligning to a specific method will remove any unexpected behaviors and improve
+runtime performance.</p>
+<pre><code class="language-rust">use api_versioning::Options;
+use api_versioning::readers::QueryStringReader;
+
+let mut options = Options::default();
+
+options.report_versions.enabled = true;
+options.reader = Box::new(QueryStringReader::default());</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><!-- description: The API Versioning settings: readers, selectors, defaults, reporting, and policies. -->
+<h1 id="api-versioning-options"><a class="header" href="#api-versioning-options">API Versioning Options</a></h1>
+<p>The API Versioning options allow you to configure, customize, and extend the default behaviors when you add API
+versioning to your application.</p>
+<p><code>Options</code> has the following configuration settings:</p>
+<ul>
+<li><a href="#api-version-reader">reader</a></li>
+<li><a href="#api-version-selector">selector</a></li>
+<li><a href="#default-api-version">default_version</a></li>
+<li><a href="#report-api-versions">report_versions</a></li>
+<li><a href="#version-policies">policies</a></li>
+<li><a href="#unsupported-api-version-status-code">unsupported_status_code</a></li>
+<li><a href="#assume-default-version-when-unspecified">assume_default_version_when_unspecified</a></li>
+</ul>
+<h2 id="default-api-version"><a class="header" href="#default-api-version">Default API Version</a></h2>
+<p>This option defines the default <code>ApiVersion</code> for the application. This is useful for services that use implicit API
+versioning in their initial release. The configured, default value is <code>1.0</code>.</p>
+<pre><code class="language-rust">use api_versioning::{Options, api_version};
+
+let mut options = Options::default();
+
+options.default_versio = api_version!(2.0);</code></pre>
+<h2 id="report-api-versions"><a class="header" href="#report-api-versions">Report API Versions</a></h2>
+<p>This option enables sending the API versioning information in HTTP header in responses. The default header names are
+<code>api-supported-versions</code> and <code>api-deprecated-versions</code>. If there are any deprecation or sunset <a href="#policies">policies</a>
+defined, they will also be included in the response headers. This option is disabled by default.</p>
+<pre><code class="language-rust">use api_versioning::{Options, api_version};
+
+let mut options = Options::default();
+
+options.report_versions.enabled = true;</code></pre>
+<p>The default HTTP header names can be changed as follows:</p>
+<pre><code class="language-rust">use api_versioning::{Options, api_version};
+
+let mut options = Options::default();
+
+options.report_versions.enabled = true;
+options.report_versions.header.supported = "supported-versions";
+options.report_versions.header.deprecated = "deprecated-versions";</code></pre>
+<h2 id="policies"><a class="header" href="#policies">Policies</a></h2>
+<p>This option allows you to define <a href="#version-policies">API versioning policies</a>. This is primarily used to define <em>deprecation</em> and
+<em>sunset</em> policies about when an API. Related links, such as to a public policy web page, can also be reported that may
+be useful to clients for more information about your API policies.</p>
+<h2 id="unsupported-api-version-status-code"><a class="header" href="#unsupported-api-version-status-code">Unsupported API Version Status Code</a></h2>
+<p>This option allows you to configure the HTTP status code used when an unsupported API version is requested. The default
+value is <code>400</code> (Bad Request).</p>
+<p>While any HTTP status code can be used, the following are the most sensible:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Status Code</th><th>Meaning</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>400</td><td>Bad Request</td><td>The API doesn’t support this version</td></tr>
+<tr><td>404</td><td>Not Found</td><td>The API doesn’t exist</td></tr>
+<tr><td>501</td><td>Not Implemented</td><td>The API isn’t implemented</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="remarks"><a class="header" href="#remarks">Remarks</a></h3>
+<p>Regardless of the configured option, when versioning by:</p>
+<ul>
+<li>URL segment, <code>404</code> is always returned</li>
+<li>media type, <code>406</code> or <code>415</code> is always returned</li>
+</ul>
+<h2 id="assume-default-version-when-unspecified"><a class="header" href="#assume-default-version-when-unspecified">Assume Default Version When Unspecified</a></h2>
+<p>This option enables support for clients to make requests with implicit API versioning. This option is disabled by
+default, which means that all clients must send requests with an explicit API version. Services will respond to client
+requests that do not specify an API version with either HTTP status code <code>400</code> (Bad Request) or HTTP status code <code>404</code>
+(Not Found), depending whether the requested route exists.</p>
+<p>This option should only be enabled when supporting legacy services that did not previously support API versioning.
+Forcing existing clients to specify an explicit API version for an existing service introduces a breaking change.
+Conceptually, clients in this situation are bound to some API version of a service, but they don’t know what it is and
+never explicit request it.</p>
+<p>When this option is enabled, clients will be able to make a request without specifying a specific API version. The API
+version of the service that is selected will be based on the configured <a href="#api-version-selector">Selector</a>. The default behavior always matches
+the <a href="#default-api-version">default_version</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div><!-- description: Read the requested API version from the query string, header, media type, or URL segment. -->
+<h1 id="api-version-reader"><a class="header" href="#api-version-reader">API Version Reader</a></h1>
+<p>The <code>Reader</code> trait defines the behavior of how an API version is read in its raw, unparsed form from the current HTTP
+request. There are multiple methods for reading an API version provided out-of-the-box or you can implement your own.
+The default, configured API version reader is a composed instance <code>QueryStringReader</code> and <code>UrlReader</code>.</p>
+<h2 id="query-string"><a class="header" href="#query-string">Query String</a></h2>
+<p>The <code>QueryStringReader</code> reads the requested API version from the requested query string. The default query string
+parameter name is <strong>api-version</strong>. <code>QueryStringReader::new</code> accepts the name of a query string parameter so that an
+alternate query string parameter can be used. It also accepts an array or <code>Vec</code> of parameter names if you support more
+than one, which might be the case for legacy reasons.</p>
+<pre><code class="language-rust">use api_versioning::{Options, readers::QueryStringReader};
+
+let mut options = Options::default();
+
+// svc?api-version=2.0
+options.reader = Box::new(QueryStringReader::default());</code></pre>
+<pre><code class="language-rust">use api_versioning::{Options, readers::QueryStringReader};
+
+let mut options = Options::default();
+
+// svc?v=2.0
+options.reader = Box::new(QueryStringReader::new("v"));</code></pre>
+<h2 id="media-type"><a class="header" href="#media-type">Media Type</a></h2>
+<p>The <code>MediaTypeReader</code> reads the requested API version from a HTTP media type request header. The supported headers are <strong>Content-Type</strong> and <strong>Accept</strong>. If both headers are present, then <strong>Content-Type</strong> is preferred. If the <strong>Accept</strong>
+header specifies qualities, then the API version associated with the highest quality is selected. This behavior is
+independent of media type negotiation. The default media type parameter is <code>"v"</code>, but you may specify an alternate name.</p>
+<pre><code class="language-rust">use api_versioning::{Options, readers::MediaTypeReader};
+
+let mut options = Options::default();
+
+// Content-Type: application/json;v=2.0
+options.reader = Box::new(MediaTypeReader::default());</code></pre>
+<pre><code class="language-rust">use api_versioning::{Options, readers::MediaTypeReader};
+
+let mut options = Options::default();
+
+// Content-Type: application/json;version=2.0
+options.reader = Box::new(MediaTypeReader::new("version"));</code></pre>
+<p>The <code>MediaTypeReader</code> also supports reading an API version from the MIME type rather than a media type parameter. This
+approach requires using the <code>template!</code> macro which allows you to specify any pattern you like, but it must match
+exactly one segment with a name of your choosing.</p>
+<pre><code class="language-rust">use api_versioning::{Options, pattern, readers::MediaTypeReader};
+
+let mut options = Options::default();
+
+// Accept: application/vnd.my.company.v1+json
+options.reader = Box::new(MediaTypeReader::template(pattern!(application/vnd.{v}+json)));</code></pre>
+<h2 id="header"><a class="header" href="#header">Header</a></h2>
+<p>The <code>HeaderReader</code> reads the requested API version from a HTTP request header. There is no default or standard HTTP
+header. You must use <code>HeaderReader::new</code> to define which HTTP header name, or names, contain the API version
+information.</p>
+<pre><code class="language-rust">use api_versioning::{Options, readers::HeaderReader};
+
+let mut options = Options::default();
+
+// api-version: 1.0
+options.reader = Box::new(HeaderReader::new("api-version"));</code></pre>
+<h2 id="url-path-segment"><a class="header" href="#url-path-segment">URL Path Segment</a></h2>
+<p>The <code>UrlReader</code> reads the requested API version from a URL path segment. The name provided is the name that matches the
+parameter name you specified in your route templates. The default name is <code>api_version</code>.</p>
+<pre><code class="language-rust">use api_versioning::{Options, readers::UrlReader};
+
+let mut options = Options::default();
+
+// v{api_version}/svc
+options.reader = Box::new(UrlReader::default());</code></pre>
+<blockquote class="blockquote-tag blockquote-tag-warning">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Warning</p>
+<p>This method of API versioning violates the REST <em>Uniform Interface</em> constraint. If you’re creating a new API, consider
+using query string or media type versioning instead.</p>
+</blockquote>
+<h2 id="composition"><a class="header" href="#composition">Composition</a></h2>
+<p>Multiple <code>Reader</code> implementations can be combined using composition. For convenience, the <code>Combine</code> trait provides
+ergonomic composition through the library prelude to compose multiple API version reading styles.</p>
+<pre><code class="language-rust">use api_versioning::{Options, prelude::*};
+use api_versioning::readers::{HeaderReader, QueryStringReader};
+
+let mut options = Options::default();
+
+options.reader = Box::new(QueryStringReader::default().combine(HeaderReader::new("x-api-version")));</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><!-- description: Choose the API version for a request that did not specify one. -->
+<h1 id="api-version-selector"><a class="header" href="#api-version-selector">API Version Selector</a></h1>
+<p>The <code>Selector</code> trait defines the behavior of how an API version is selected for a given request context. This service is
+typically only used when a client has not requested an explicit API version and the
+<code>assume_default_version_when_unspecified</code> option is enabled. The role of the API version selector is to select the
+appropriate API version given the current request and a model of available API versions.</p>
+<blockquote class="blockquote-tag blockquote-tag-note">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p>
+<p>Although the <code>Selector</code> can be used for other scenarios, it is currently only utilized when no API version is
+requested by a client and the server allows this behavior. The selector provides the rules that selects the most
+appropriate API version according to the server. There is no built-in capability to ignore an API version explicitly
+requested by a client.</p>
+</blockquote>
+<p>There are several API version selectors provided out-of-the-box or you can implement your own. The default, configured
+API version selector is <code>ConstantSelector</code>. The selector can be configured with:</p>
+<pre><code class="language-rust">let mut options = Options::default();
+
+options.selector = Some(Box::new(ConstantSelector::new(api_version!(2022-01-01))));</code></pre>
+<h2 id="constant"><a class="header" href="#constant">Constant</a></h2>
+<p>The <code>ConstantSelector</code> always selects a user-defined API version, regardless of the request or available API version
+information. The default behavior uses <code>Options::default_version</code>.</p>
+<h2 id="current"><a class="header" href="#current">Current</a></h2>
+<p>The <code>CurrentVersionSelector</code> selects the maximum API version available which does not have a version status. If no match
+is found, it falls back to the configured <code>Options::default_version</code>. An an example, if the versions <code>1.0</code>,
+<code>2.0</code>, and <code>3.0-alpha</code> are available, then <code>2.0</code> will be selected because it’s the highest, implemented or released API
+version.</p>
+<h2 id="lowest"><a class="header" href="#lowest">Lowest</a></h2>
+<p>The <code>LowestVersionSelector</code> selects the minimum API version available which does not have a version status. If no match
+is found, it falls back to the configured <code>Options::default_version</code>. As an example, if the versions
+<code>0.9-beta</code>, <code>1.0</code>, <code>2.0</code>, and <code>3.0-alpha</code> are available, then <code>1.0</code> will be selected because it’s the lowest,
+implemented or released API version. Your endpoints must declare one or more API versions for the selector to work
+effectively or it will always select the configured <code>Options::default_version</code>.</p>
+<div style="break-before: page; page-break-before: always;"></div><!-- description: The RFC 9457 problem details returned for API version errors. -->
+<h1 id="error-responses"><a class="header" href="#error-responses">Error Responses</a></h1>
+<p>There are several built-in error responses. The body of each error response complies with <a href="https://www.rfc-editor.org/rfc/rfc9457.html">RFC 9457</a> <em>Problem Details</em>.</p>
+<h3 id="unspecified"><a class="header" href="#unspecified">Unspecified</a></h3>
+<p>All versioned services require that an API version be specified. When a client makes a request without providing an API
+version, then the server will respond with a bad request. This behavior is typically not exhibited when the API is
+version-neutral or the <code>assume_default_version_when_unspecified</code> option is configured to true.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th></th><th></th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Title</strong></td><td>Unspecified API version</td></tr>
+<tr><td><strong>Type</strong></td><td>https://docs.api-versioning.org/problems#unspecified</td></tr>
+<tr><td><strong>Status</strong></td><td>400</td></tr>
+<tr><td><strong>Detail</strong></td><td>An API version is required, but was not specified</td></tr>
+<tr><td><strong>Code</strong></td><td>ApiVersionUnspecified</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="unsupported"><a class="header" href="#unsupported">Unsupported</a></h3>
+<p>When a client requested API version does not match any of the defined handlers, then the server will respond with a
+problem. If the <code>report_versions</code> option is true, then the supported versions will be returned to the client in the
+<code>api-supported-versions</code> HTTP header.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th></th><th></th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Title</strong></td><td>Unsupported API version</td></tr>
+<tr><td><strong>Type</strong></td><td>https://docs.api-versioning.org/problems#unsupported</td></tr>
+<tr><td><strong>Status</strong></td><td>400<sup>1</sup> <sup>2</sup></td></tr>
+<tr><td><strong>Detail</strong></td><td>The specified API version is not supported</td></tr>
+<tr><td><strong>Code</strong></td><td>UnsupportedApiVersion</td></tr>
+</tbody>
+</table>
+</div>
+<blockquote>
+<p><sub>1: Defined by <code>Options::unsupported_status_code</code></sub><br />
+<sub>2: The value is always <code>404</code> when versioning by URL segment</sub></p>
+</blockquote>
+<h3 id="invalid"><a class="header" href="#invalid">Invalid</a></h3>
+<p>When a client makes a request with an API version, but the value is malformed or cannot be parsed, then the server will
+respond with a bad request. This typically occurs where the value contains incomplete version components or the
+date-only form is invalid (ex: 2016-02-30).</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th></th><th></th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Title</strong></td><td>Invalid API version</td></tr>
+<tr><td><strong>Type</strong></td><td>https://docs.api-versioning.org/problems#invalid</td></tr>
+<tr><td><strong>Status</strong></td><td>400</td></tr>
+<tr><td><strong>Detail</strong></td><td>An API version was specified, but it is invalid</td></tr>
+<tr><td><strong>Code</strong></td><td>InvalidApiVersion</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="ambiguous"><a class="header" href="#ambiguous">Ambiguous</a></h3>
+<p>When a client requests a specific API version, the specified API version must be unambiguous to the server. A client is
+allowed to specify an API version more than once, but if the values are not identical, then the server will respond
+with a bad request.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th></th><th></th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Title</strong></td><td>Ambiguous API version</td></tr>
+<tr><td><strong>Type</strong></td><td>https://docs.api-versioning.org/problems#ambiguous</td></tr>
+<tr><td><strong>Status</strong></td><td>400</td></tr>
+<tr><td><strong>Detail</strong></td><td>An API version was specified multiple times with different values</td></tr>
+<tr><td><strong>Code</strong></td><td>AmbiguousApiVersion</td></tr>
+</tbody>
+</table>
+</div>
+<h4 id="examples"><a class="header" href="#examples">Examples</a></h4>
+<pre><code class="language-http">GET /resource?api-version=1.0 HTTP/2
+api-version: 1.0
+</code></pre>
+<p><em>Figure 1: Multiple, unambiguous API versions requested</em></p>
+<pre><code class="language-http">GET /resource?api-version=1.0 HTTP/2
+api-version: 2.0
+</code></pre>
+<p><em>Figure 2: Ambiguous API versions requested between in query string and headers</em></p>
+<pre><code class="language-http">GET /resource?api-version=1.0&amp;api-version=2.0 HTTP/2
+</code></pre>
+<p><em>Figure 3: Ambiguous API versions requested in the query string</em></p>
+<pre><code class="language-http">GET /resource HTTP/2
+api-version: 1.0
+api-version: 2.0
+</code></pre>
+<p><em>Figure 4: Ambiguous API versions requested in the headers</em></p>
+<h2 id="customization"><a class="header" href="#customization">Customization</a></h2>
+<p>Error responses can be customized or extended in several ways.</p>
+<h2 id="no-error"><a class="header" href="#no-error">No Error</a></h2>
+<p>To remove errors and only respond with a status code, use <code>default-features = false</code> and omit the <strong>problem-details</strong>
+feature.</p>
+<h2 id="custom-error"><a class="header" href="#custom-error">Custom Error</a></h2>
+<p>You can provide your own custom errors by implementing a custom <code>error::Responder</code> and wire it up to the <code>Router</code>. A
+built-in conversion is also support for a compatible function or closure.</p>
+<pre><code class="language-rust">use api_versioning_axum::{Router, error::Context};
+
+let router = Router::default().with_error_responder(|ctx: &amp;Context&lt;'_&gt;| {
+    (ctx.status(), ctx.error().to_string()).into_response()
+});</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><!-- description: Document a versioned service with OpenAPI. -->
+<h1 id="api-documentation"><a class="header" href="#api-documentation">API Documentation</a></h1>
+<p>Adding documentation is often the final, pivotal step in making your versioned services available to clients and fosters
+their utilization. While there are many approaches to documenting your services, OpenAPI (formerly Swagger) has quickly
+become the de facto method for describing REST services.</p>
+<p>The API versioning provides several extensions that make it easy to add versioning into your OpenAPI configurations,
+which do most of the heavy lifting to discover and collate your REST services by API version. <a href="https://crates.io/crates/utoipa">utoipa</a> is currently the
+only supported OpenAPI generator.</p>
+<h2 id="example-8"><a class="header" href="#example-8">Example</a></h2>
+<p>The following is a simple, versioned service for people. The <code>email</code> field only appears after version 2.0 and the <code>phone</code>
+field only appears after version 3.0.</p>
+<blockquote class="blockquote-tag blockquote-tag-note">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p>
+<p>The <code>utoipa::path</code> attribute macro requires the <code>path</code> parameter, but this will automatically be derived from
+the corresponding versioned route group. <code>path = ""</code> is specified, but is not used. If an explicit path is provided it
+will be ignored.</p>
+</blockquote>
+<pre><code class="language-rust">use api_versioning::{ApiVersion, api_version, visible_in_version};
+use api_versioning_axum::{Router, VersionedApi};
+use api_versioning_utoipa::{ApiDocument, doc, documents};
+use axum::{Json, extract::Path};
+use serde::{Deserialize, Serialize};
+use utoipa::{OpenApi, ToSchema};
+
+#[derive(OpenApi)]
+#[openapi(info(title = "Example API", description = "An example API."))]
+struct ApiDoc;
+
+/// Represents a person.
+#[visible_in_version]
+#[derive(Default, Deserialize, Serialize, ToSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct Person {
+    /// Gets or sets the unique identifier for a person.
+    #[serde(default)]
+    pub id: u32,
+
+    /// Gets or sets the first name of a person.
+    pub first_name: String,
+
+    /// Gets or sets the last name of a person.
+    pub last_name: String,
+
+    /// Gets or sets the email address for a person.
+    #[range(2.0..)]
+    pub email: String,
+
+    /// Gets or sets the telephone number for a person.
+    #[range(3.0..)]
+    pub phone: String,
+}
+
+pub mod v1 {
+    use super::*;
+
+    pub mod people {
+        use super::*;
+
+        #[utoipa::path(
+            get,
+            path = "",
+            summary = "Get Person",
+            description = "Gets a single person.",
+            params(
+                ("id" = u32, Path, description = "The requested person identifier.")
+            ),
+            responses(
+                (status = 200, description = "The person was successfully retrieved.", body = [Person]),
+                (status = 404, description = "The person does not exist.")
+            ))]
+        pub async fn by_id(Path(id): Path&lt;u32&gt;) -&gt; Json&lt;Person&gt; {
+            Json(Person {
+                id,
+                first_name: "John".into(),
+                last_name: "Doe".into(),
+                ..Default::default()
+            })
+        }
+    }
+}
+
+pub mod v2 {
+    use super::*;
+    
+    pub mod people {
+        use super::*;
+
+        #[utoipa::path(
+            get,
+            path = "",
+            summary = "Get Person",
+            description = "Gets a single person.",
+            params(
+                ("id" = u32, Path, description = "The requested person identifier.")
+            ),
+            responses(
+                (status = 200, description = "The person was successfully retrieved.", body = [Person]),
+                (status = 404, description = "The person does not exist.")
+            ))]
+        pub async fn by_id(Path(id): Path&lt;u32&gt;) -&gt; Json&lt;Person&gt; {
+            Json(Person {
+                id,
+                first_name: "John".into(),
+                last_name: "Doe".into(),
+                email: "john.doe@somewhere.come".into(),
+                ..Default::default()
+            })
+        }
+    }
+}
+
+pub mod v3 {
+    use super::*;
+    
+    pub mod people {
+        use super::*;
+
+        #[utoipa::path(
+            get,
+            path = "",
+            summary = "Get Person",
+            description = "Gets a single person.",
+            params(
+                ("id" = u32, Path, description = "The requested person identifier.")
+            ),
+            responses(
+                (status = 200, description = "The person was successfully retrieved.", body = [Person]),
+                (status = 404, description = "The person does not exist.")
+            ))]
+        pub async fn by_id(Path(id): Path&lt;u32&gt;) -&gt; Json&lt;Person&gt; {
+            Json(Person {
+                id,
+                first_name: "John".into(),
+                last_name: "Doe".into(),
+                email: "john.doe@somewhere.com".into,
+                phone: "555-987-1234".into(),
+            })
+        }
+    }
+}
+
+fn people(api: VersionedApi) -&gt; VersionedApi {
+    api.name("People")
+       .has([api_version!(1.0), api_version!(2.0), api_version!(3.0)])
+       .route("/{id}", |e| {
+           e.get(doc!(v1::people::by_id))
+               .map(api_version!(2.0), |h| h.get(doc!(v2::people::by_id)))
+               .map(api_version!(3.0), |h| h.get(doc!(v3::people::by_id)))
+       })
+}
+
+/// Creates the application and an OpenAPI document for each API version.
+pub fn app() -&gt; (axum::Router, Vec&lt;ApiDocument&gt;) {
+    let (app, apis) = Router::default().api("/api/people", people).split();
+    (app, documents(&amp;apis, ApiDoc::openapi()))
+}</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><!-- description: The DocumentOptions settings that describe each generated OpenAPI document. -->
+<h1 id="openapi-options"><a class="header" href="#openapi-options">OpenAPI Options</a></h1>
+<p>The OpenAPI options allows you to configure, customize, and extend the default behaviors when you add OpenAPI support.</p>
+<p>The <code>DocumentOptions</code> have the following configuration settings:</p>
+<ul>
+<li><a href="#substitute-in-url">substitute_api_version_in_url</a></li>
+<li><a href="#add-parameter-when-version-neutral">add_api_version_parameters_when_version_neutral</a></li>
+<li><a href="#default-api-version-parameter-description">api_version_parameter_description</a></li>
+<li><a href="#hide-policy-links">hide_policy_links</a></li>
+<li><a href="#deprecation">deprecation_notice</a></li>
+<li><a href="#sunset">sunset_notice</a></li>
+</ul>
+<h3 id="substitute-in-url"><a class="header" href="#substitute-in-url">Substitute in URL</a></h3>
+<p>This option will substitute API version parameters that are in the route template with the corresponding API version
+value. When an API version parameter value is substituted, that parameter is also removed from the parameters associated
+with the API description. This option is useful for service authors that version by URL segment and wants the API
+version value automatically populated. For example, the route template <code>api/v{api_version}/resource</code> for API version
+1.0 will become <code>api/v1/resource</code> and the API version parameter will be removed. The default value is <code>true</code>.</p>
+<h3 id="add-parameter-when-version-neutral"><a class="header" href="#add-parameter-when-version-neutral">Add Parameter When Version-Neutral</a></h3>
+<p>This option let’s you define whether an API version parameter is generated for version-neutral APIs. A version-neutral
+API does not require an API version; however, you may not want a client to know the API is version-neutral. By setting
+<code>add_api_version_parameters_when_version_neutral</code> to <code>true</code>, an API version parameter will be documented, even though
+it is not required. The default value is <code>false</code>.</p>
+<h3 id="default-api-version-parameter-description"><a class="header" href="#default-api-version-parameter-description">Default API Version Parameter Description</a></h3>
+<p>This option defines the description of a generated API version parameter. The default value is
+<code>"The requested API version"</code>. The description is only applied to a parameter that does not already have one. If an
+operation declares the API version parameter with a description, such as through <code>#[utoipa::path(params(...))]</code>, then
+that description is retained.</p>
+<blockquote class="blockquote-tag blockquote-tag-note">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p>
+<p>A description that is not known until runtime, such as one read from configuration, can be provided once at startup
+with <code>String::leak</code>.</p>
+</blockquote>
+<pre><code class="language-rust">use api_versioning_utoipa::DocumentOptions;
+
+let options = DocumentOptions {
+    api_version_parameter_description: "The API version of the request",
+    ..Default::default()
+};</code></pre>
+<h3 id="hide-policy-links"><a class="header" href="#hide-policy-links">Hide Policy Links</a></h3>
+<p>This option controls whether deprecation or sunset policy links are displayed. The default value is <code>false</code>, which
+means any defined policies links are displayed as bulleted list of hyperlinks. Policy links rendered for user interface
+purposes must have the link type <code>text/html</code>.</p>
+<p>Policies may define other types of links, but these are not shown in the user interface. These links are rendered in
+OpenAPI documents as the <code>x-api-versioning</code> document extension.</p>
+<h3 id="deprecation"><a class="header" href="#deprecation">Deprecation</a></h3>
+<p>If an API has an applicable deprecation policy, this setting defines the callback function used to generate the message
+text based on the provided policy. The default setting returns a generic message in English indicating that the API is
+deprecated if no date is specified or a date-specific message in English when the API became, or will become,
+deprecated.</p>
+<h3 id="sunset"><a class="header" href="#sunset">Sunset</a></h3>
+<p>If an API has an applicable sunset policy, this setting defines the callback function used to generate the message text
+based on the provided policy. If the policy does not have a date, then no message is generated; otherwise, a
+date-specific message in English is generated indicating when the API became, or will become, sunset. A sunset policy is
+for an API that is sunset and will no longer exist. The effective sunset policy date should always be in the future as
+there should be no information about the API after it is sunset.</p>
+<div style="break-before: page; page-break-before: always;"></div><!-- description: Point the Scalar OpenAPI user interface at the documents generated for each API version. -->
+<h1 id="scalar-integration"><a class="header" href="#scalar-integration">Scalar Integration</a></h1>
+<p><a href="https://scalar.com/">Scalar</a> has quickly become one of the more common, modern OpenAPI user interfaces and it easily integrates with API
+Versioning. The only thing you need to do is tell Scalar about the documents your application will generate.</p>
+<p>To explore your API with <a href="https://scalar.com/">Scalar</a>, use <a href="https://crates.io/crates/utoipa-scalar">utoipa-scalar</a>.</p>
+<pre><code class="language-rust">use api_versioning_utoipa::routes;
+use serde_json::{Value, json};
+use utoipa_scalar::{Scalar, Servable};
+
+// The default template of utoipa-scalar always embeds `$spec` as a document, so a configuration such as `sources`
+// requires a custom template. See &lt;https://github.com/juhaku/utoipa/issues/1005&gt;.
+const HTML: &amp;str = r#"&lt;!doctype html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;$title&lt;/title&gt;
+    &lt;meta charset="utf-8"/&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1"/&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id="app"&gt;&lt;/div&gt;
+&lt;script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference"&gt;&lt;/script&gt;
+&lt;script&gt;
+    Scalar.createApiReference('#app', $spec)
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;"#;
+
+#[tokio::main]
+async fn main() -&gt; anyhow::Result&lt;()&gt; {
+    let (app, documents) = crate::app();
+    let latest = documents.len() - 1;
+    let sources: Vec&lt;Value&gt; = documents
+        .iter()
+        .enumerate()
+        .map(|(index, document)| {
+            json!({
+                "title": document.name(),
+                "slug": document.name(),
+                "url": document.url(),
+                "default": index == latest,
+            })
+        })
+        .collect();
+    let scalar = Scalar::with_url("/scalar", json!({ "sources": sources }))
+        .custom_html(HTML)
+        .title("API Reference");
+    let app = app.merge(routes(&amp;documents)).merge(scalar);
+    let listener = tokio::net::TcpListener::bind(common::ADDRESS).await?;
+
+    axum::serve(listener, app).await?;
+    Ok(())
+}</code></pre>
+<p>A complete example can be found in <a href="https://github.com/commonsensesoftware/asp-rs-versioning/blob/main/asp-utoipa/examples/scalar.rs">scalar.rs</a>. You can run the example by cloning the repository or starting a
+Codespace and running:</p>
+<pre><code class="language-bash">cargo run --package api-versioning-utoipa --example scalar
+</code></pre>
+<p>then navigate to <code>http://localhost:3000/scalar</code>.</p>
+<div style="break-before: page; page-break-before: always;"></div><!-- description: Point the Swagger UI OpenAPI user interface at the documents generated for each API version. -->
+<h1 id="swagger-ui-integration"><a class="header" href="#swagger-ui-integration">Swagger UI Integration</a></h1>
+<p>The <a href="https://swagger.io/">Swagger UI</a> is a battle-tested OpenAPI user interface and easily integrates with API Versioning. The only thing you
+need to do is tell the Swagger UI about the documents your application will generate.</p>
+<p>To explore your API with the <a href="https://swagger.io/">Swagger UI</a>, use <a href="https://crates.io/crates/utoipa-swagger-ui">utoipa-swagger-ui</a>.</p>
+<pre><code class="language-rust">use api_versioning_utoipa::{ApiDocument, routes};
+use utoipa_swagger_ui::{Config, SwaggerUi, Url};
+
+#[tokio::main]
+async fn main() -&gt; anyhow::Result&lt;()&gt; {
+    let (app, documents) = crate::app();
+
+    // Swagger UI requires the name and URL of each document to live for the rest of the program
+    let documents: &amp;'static [ApiDocument] = documents.leak();
+    let latest = documents.len() - 1;
+    let urls = documents
+        .iter()
+        .enumerate()
+        .map(|(index, document)| Url::with_primary(document.name(), document.url(), index == latest));
+    let app = app
+        .merge(routes(documents))
+        .merge(SwaggerUi::new("/swagger-ui").config(Config::new(urls)));
+    let listener = tokio::net::TcpListener::bind(common::ADDRESS).await?;
+
+    axum::serve(listener, app).await?;
+    Ok(())
+}</code></pre>
+<p>A complete example can be found in <a href="https://github.com/commonsensesoftware/asp-rs-versioning/blob/main/asp-utoipa/examples/swagger_ui.rs">swagger_ui.rs</a>. You can run the example by cloning the repository or starting a
+Codespace and running:</p>
+<pre><code class="language-bash">cargo run --package api-versioning-utoipa --example swagger_ui
+</code></pre>
+<p>then navigate to <code>http://localhost:3000/swagger</code>.</p>
+<div style="break-before: page; page-break-before: always;"></div><!-- description: Known limitations. -->
+<h1 id="known-limitations"><a class="header" href="#known-limitations">Known Limitations</a></h1>
+<h2 id="url-path-segment-1"><a class="header" href="#url-path-segment-1">URL Path Segment</a></h2>
+<p>API versioning does not fundamentally change how routing works. When you elect to support API versioning via a URL path
+segment, the API version is part of the path considered in routing. There is currently no built-in method to match a
+route where the API version in a URL path segment is unspecified.</p>
+<p>The recommended method to enable this scenario is to use <em>Double Route Registration</em> by providing multiple routes for
+the corresponding handlers as follows:</p>
+<pre><code class="language-rust">use api_versioning::Options;
+use api_versioning_axum::Router;
+use axum::extract::Path;
+use serde::Deserialize;
+
+// The route parameters shared by both routes. Fields are matched by name, so
+// the `api_version` segment captured by `/v{api_version}/...` is ignored, and
+// the default route, which has no such segment, also matches.
+#[derive(Deserialize)]
+struct Params {
+    id: u32,
+}
+
+// GET api/values/{id}
+// GET api/v1/values/{id}
+async fn by_id(Path(Params { .. }): Path&lt;Params&gt;) {}
+
+// GET api/v2/values/{id}
+async fn by_id_v2(Path(Params { .. }): Path&lt;Params&gt;) {}
+
+#[tokio::main]
+async fn main() -&gt; anyhow::Result&lt;()&gt; {
+    let mut options = Options::default();
+    let default_version = options.default_version.clone();
+
+    options.assume_default_version_when_unspecified = true;
+
+    let app: axum::Router = Router::new(options)
+        .api("/api/values", |api| {
+          api.has(default_version)
+             .route("/{id}", |e| e.get(by_id))
+        })
+        .api("/api/v{api_version}/values", |api| {
+            api.has([api_version!(1.0), api_version!(2.0)])
+               .route("/{id}", |e| {
+                  e.get(by_id)
+                   .map(api_version!(2.0), |h| h.get(by_id_v2))
+            })
+        })
+        .into();
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:3000").await?;
+
+    axum::serve(listener, app).await?;
+    Ok(())
+}</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><!-- description: Common questions about API versioning. -->
+<h1 id="faq"><a class="header" href="#faq">FAQ</a></h1>
+<p><strong>What is the difference between the <code>default_version</code> and <code>selector</code> options?</strong></p>
+<p>There are subtle differences between these two <a href="#api-versioning-options">options</a>. Typically, you only need to configure one or the other, but
+not both.</p>
+<p>The <code>default_version</code> has the following uses:</p>
+<ul>
+<li>The default or initial API version shared by all services</li>
+<li>The fallback API version used when no other API version can be resolved</li>
+</ul>
+<p>The <code>default_version</code> value is <code>1.0</code>, but that may not be your starting API version. For example, you might use the
+date-only API versioning scheme. This configuration option prevents the value from being hard-coded and makes it easy
+to change the API version for your initial set of services.</p>
+<p>The <code>selector</code> option has a similar, but different purpose. Any implementation of the <a href="#api-version-selector">Selector</a> is used to select the
+best API version given the current HTTP request and API version model. The provided API version model will already be
+aggregated across all known service versions.</p>
+<p>While this component could be used for a number of different purposes, it is currently only used to select the API
+version that should be used when a client does not provide an API version. This option is thus only used when the
+<code>assume_default_version_when_unspecified</code> option is also <code>true</code>. The default, configured value for this option is a
+instance of the <code>ConstantSelector</code>, which always returns the value of <code>default_version</code>. Other <a href="#api-version-selector">Selector</a>
+implementations use the <code>default_version</code> as the final fallback value.</p>
+<p>It’s recommended that the <a href="#api-version-selector">Selector</a> implementation you use provides stable, deterministic results. This is particularly
+important for existing clients that may not be aware that you have introduced API versioning. Contrary to this guidance,
+a number of service authors have requested granular control over how the API versions should be selected. As an example,
+a service author might want to allow a client to never specify an API version and use an internal <em>client-to-version</em>
+mapping that is maintained on the server after the first client connects. How this is implemented in a <a href="#api-version-selector">Selector</a> is up
+to the service author, but it likely requires information from the current HTTP request and the available API versions
+for a service.</p>
+<div style="break-before: page; page-break-before: always;"></div><!-- description: Runnable sample projects covering versioned models, endpoints, and OpenAPI. -->
+<h1 id="examples-1"><a class="header" href="#examples-1">Examples</a></h1>
+<p>The following are complete, runnable sample projects. These can be run by cloning the repository or by creating a
+Codespace.</p>
+<h2 id="basic"><a class="header" href="#basic">Basic</a></h2>
+<p><a href="https://github.com/commonsensesoftware/asp-rs-versioning/blob/main/asp-axum/examples/basic.rs"><img src="https://img.shields.io/badge/example-code-2B91AF" alt="examples"></a></p>
+<p>Demonstrates the basic features and capabilities.</p>
+<pre><code class="language-bash">cargo run --package api-versioning-axum --example basic
+</code></pre>
+<p>Explore the example using <a href="https://github.com/commonsensesoftware/asp-rs-versioning/blob/main/asp-axum/examples/basic.http">basic.http</a> with the <a href="https://marketplace.visualstudio.com/items?itemName=humao.rest-client">REST Client</a>.</p>
+<h2 id="weather-forecast"><a class="header" href="#weather-forecast">Weather Forecast</a></h2>
+<p><a href="https://github.com/commonsensesoftware/asp-rs-versioning/blob/main/asp-axum/examples/forecast.rs"><img src="https://img.shields.io/badge/example-code-2B91AF" alt="examples"></a></p>
+<p>A simple weather forecast service that illustrates additional features.</p>
+<pre><code class="language-bash">cargo run --package api-versioning-axum --example forecast
+</code></pre>
+<p>Explore the example using <a href="https://github.com/commonsensesoftware/asp-rs-versioning/blob/main/asp-axum/examples/forecast.http">forecast.http</a> with the <a href="https://marketplace.visualstudio.com/items?itemName=humao.rest-client">REST Client</a>.</p>
+<h2 id="module-path-conventions"><a class="header" href="#module-path-conventions">Module Path Conventions</a></h2>
+<p><a href="https://github.com/commonsensesoftware/asp-rs-versioning/blob/main/asp-axum/examples/by_module.rs"><img src="https://img.shields.io/badge/example-code-2B91AF" alt="examples"></a></p>
+<p>Demonstrates how to version services by deriving from the handler module path.</p>
+<pre><code class="language-bash">cargo run --package api-versioning-axum --example by_module
+</code></pre>
+<p>Explore the example using <a href="https://github.com/commonsensesoftware/asp-rs-versioning/blob/main/asp-axum/examples/by_module.http">by_module.http</a> with the <a href="https://marketplace.visualstudio.com/items?itemName=humao.rest-client">REST Client</a>.</p>
+<h2 id="openapi-1"><a class="header" href="#openapi-1">OpenAPI</a></h2>
+<p>The following provide OpenAPI examples using <a href="https://crates.io/crates/utoipa">utoipa</a>.</p>
+<h3 id="scalar"><a class="header" href="#scalar">Scalar</a></h3>
+<p><a href="https://github.com/commonsensesoftware/asp-rs-versioning/blob/main/asp-utoipa/examples/scalar.rs"><img src="https://img.shields.io/badge/example-code-2B91AF" alt="examples"></a></p>
+<p>Demonstrates OpenAPI integration with Scalar using <a href="https://crates.io/crates/utoipa-scalar">utoipa-scalar</a>.</p>
+<pre><code class="language-bash">cargo run --package api-versioning-utoipa --example scalar
+</code></pre>
+<h3 id="swagger-ui"><a class="header" href="#swagger-ui">Swagger UI</a></h3>
+<p><a href="https://github.com/commonsensesoftware/asp-rs-versioning/blob/main/asp-utoipa/examples/swagger_ui.rs"><img src="https://img.shields.io/badge/example-code-2B91AF" alt="examples"></a></p>
+<p>Demonstrates OpenAPI integration with the Swagger UI using <a href="https://crates.io/crates/utoipa-swagger-ui">utoipa-swagger-ui</a>.</p>
+<pre><code class="language-bash">cargo run --package api-versioning-utoipa --example swagger_ui
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+        <script>
+            window.playground_line_numbers = true;
+        </script>
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+        <script src="ace-2a3cd908.js"></script>
+        <script src="mode-rust-2c9d5c9a.js"></script>
+        <script src="editor-16ca416c.js"></script>
+        <script src="theme-dawn-4493f9c8.js"></script>
+        <script src="theme-tomorrow_night-9dbe62a9.js"></script>
+
+        <script src="elasticlunr-ef4e11c1.min.js"></script>
+        <script src="mark-09e88c2c.min.js"></script>
+        <script src="searcher-09f2665d.js"></script>
+
+        <script src="clipboard-1626706a.min.js"></script>
+        <script src="highlight-d404b1ce.js"></script>
+        <script src="book-609e4cb8.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="theme/footer-163fabe1.js"></script>
+        <script src="theme/pagetoc-9f110145.js"></script>
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+
+    </div>
+    </body>
+</html>

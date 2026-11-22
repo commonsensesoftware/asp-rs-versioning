@@ -1,0 +1,5 @@
+#!/bin/sh
+# .githooks/pre-push
+set -e
+
+cargo clippy --all-targets -- -D warnings

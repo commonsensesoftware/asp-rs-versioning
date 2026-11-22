@@ -1,0 +1,121 @@
+name: CI
+
+on:
+  push:
+    branches-ignore:
+      - 'dependabot/**'
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 8 * * 1'
+
+env:
+  CARGO_TERM_COLOR: always
+  # the lint toolchain is pinned so that a new Rust release cannot fail a commit that
+  # previously passed. rustfmt and clippy both change between releases; clippy in
+  # particular adds lints and promotes them to warn-by-default. bump this deliberately
+  # and fix any new findings in the same change
+  RUST_LINT_TOOLCHAIN: '1.99.0'
+
+jobs:
+  ci:
+    name: CI
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      checks: write
+      pull-requests: write
+      security-events: write
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+
+      - name: Install Rust
+        run: |
+          curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain nightly
+          source "$HOME/.cargo/env"
+
+      # REF: https://github.com/marketplace/actions/rust-cache
+
+      - name: Cache Cargo Artifacts
+        uses: Swatinem/rust-cache@v2
+
+      # REF: https://crates.io/crates/cargo2junit
+
+      - name: Install Cargo-to-JUnit
+        run: cargo install cargo2junit
+
+      - name: Cargo Build
+        run: cargo build --workspace --all-targets --all-features
+
+      # note: 'shell: bash' is required so that pipefail is set; without it, a
+      # failing 'cargo test' is masked by the exit code of 'cargo2junit'.
+      # every crate and feature is tested, which includes the integration tests that
+      # require the 'macros' feature and the axum, macros, and utoipa crates
+      - name: Cargo Test
+        shell: bash
+        run: |
+          cargo test --workspace --all-features -- -Z unstable-options --format json --report-time | cargo2junit > target/debug/test-results.xml
+
+      # REF: https://github.com/marketplace/actions/publish-test-results
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: |
+            target/debug/*.xml
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+
+      - name: Install Rust
+        run: |
+          curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain "$RUST_LINT_TOOLCHAIN"
+          source "$HOME/.cargo/env"
+          # rustfmt runs on nightly because rustfmt.toml uses unstable settings
+          rustup toolchain install nightly --profile minimal --component rustfmt
+
+      - name: Cache Cargo Artifacts
+        uses: Swatinem/rust-cache@v2
+        with:
+          key: lint
+
+      # formatting is deterministic for a pinned toolchain, so this gates the build
+      # nightly is used so that api_version! macros are ignored via configuration
+      - name: Cargo Format
+        run: cargo +nightly fmt --all --check
+
+      # '-D warnings' is safe to gate on here only because the toolchain is pinned above.
+      # a new Rust release cannot introduce a lint that fails a commit which previously
+      # passed; new findings surface when RUST_LINT_TOOLCHAIN is bumped, which is a
+      # deliberate, reviewable change
+      - name: Cargo Clippy
+        run: cargo clippy --workspace --all-targets --all-features -- -D warnings
+
+      # REF: https://crates.io/crates/cargo-rdme
+
+      # the version is pinned for the same reason as the lint toolchain. the binary is
+      # cached by rust-cache, so it is only built when the version changes
+      # intralinks are resolved with rustdoc using a nightly toolchain that is pinned by
+      # each cargo-rdme release, so it changes with the version above. --check generates
+      # the README to compare it, so it needs the toolchain too
+      - name: Install Cargo README
+        run: |
+          cargo install cargo-rdme --locked --version 2.2.3
+          cargo rdme install-rust-toolchain-for-intralinks
+
+      # the README of each crate with cargo-rdme markers is generated from its crate
+      # documentation; this fails when a README was not regenerated after a change
+      - name: Cargo README
+        run: |
+          for crate in api-versioning api-versioning-axum api-versioning-utoipa; do
+            cargo rdme --check --workspace-project "$crate"
+          done
