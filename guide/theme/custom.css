@@ -113,6 +113,16 @@ strong {
     background: url("../logo.svg") no-repeat center / contain;
 }
 
+.menu-title::after {
+    content: "";
+    display: inline-block;
+    width: 1.6em;
+    height: 1.6em;
+    margin-inline-start: 0.4em;
+    vertical-align: -0.35em;
+    background: url("../rust-logo-32x32.png") no-repeat center / contain;
+}
+
 /* the logo's dark strokes vanish on the dark themes, so swap in a light variant */
 .ayu .menu-title::before,
 .coal .menu-title::before,

@@ -27,9 +27,9 @@ api-supported-versions: 1.0, 2.0, 3.0
 api-deprecated-versions: 0.9
 deprecation: @1640995200
 sunset: Thu, 01 Apr 2022 00:00:00 GMT
-link: <https://docs.api.com/policies.html?api-version=1.0>; rel="deprecation"; title="API Policy"; type="text/html"
-link: <https://docs.api.com/policies.html?api-version=1.0>; rel="sunset"; title="API Policy"; type="text/html"
-link: </openapi/v1.json>; rel="openapi"; title="OpenAPI"; type="application/json"
+link: <policies.html?api-version=1.0>; rel="deprecation"; title="API Policy"; type="text/html"
+link: <policies.html?api-version=1.0>; rel="sunset"; title="API Policy"; type="text/html"
+link: <openapi/v1.json>; rel="openapi"; title="OpenAPI"; type="application/json"
 ```
 
 This indicates to a client that the requested API version `1.0` was deprecated on January 1, 2022 and will sunset on

@@ -12,10 +12,9 @@ use tokio::net::TcpListener;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    let options = Options::default();
     let app: axum::Router = Router::default()
         .api("/people", |api| {
-            api.has([api_version!(1.0)])
+            api.has(api_version!(1.0))
                .route("/", |e| e.get(|| async {}))
         })
         .into();

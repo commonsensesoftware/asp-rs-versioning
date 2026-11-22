@@ -17,8 +17,9 @@ use api_versioning_axum::Router;
 use axum::extract::Path;
 use serde::Deserialize;
 
-// The route parameters shared by both routes. Fields are matched by name, so the `api_version` segment captured by
-// `/v{api_version}/...` is ignored, and the default route, which has no such segment, also matches.
+// The route parameters shared by both routes. Fields are matched by name, so
+// the `api_version` segment captured by `/v{api_version}/...` is ignored, and
+// the default route, which has no such segment, also matches.
 #[derive(Deserialize)]
 struct Params {
     id: u32,

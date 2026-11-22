@@ -2,7 +2,7 @@
 
 # FAQ
 
-## What is the difference between the `default_version` and `selector` options?
+**What is the difference between the `default_version` and `selector` options?**
 
 There are subtle differences between these two [options]. Typically, you only need to configure one or the other, but
 not both.
