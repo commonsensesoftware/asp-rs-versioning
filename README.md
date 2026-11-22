@@ -22,18 +22,18 @@ The supported flavors are:
 - **API Versioning**
   <div>Provides the API versioning abstractions for your data models and preferred web framework</div>
 
-  [![crates.io](https://img.shields.io/crates/v/asp-rs-versioning.svg)](https://crates.io/crates/asp-versioning)
+  [![crates.io](https://img.shields.io/crates/v/asp-rs-versioning.svg)](https://crates.io/crates/api-versioning)
 
 - **API Versioning with Axum**
   <div>Adds API versioning to your [axum] applications</div>
 
-  [![crates.io](https://img.shields.io/crates/v/asp-rs-versioning.svg)](https://crates.io/crates/asp-versioning-axum)
+  [![crates.io](https://img.shields.io/crates/v/asp-rs-versioning.svg)](https://crates.io/crates/api-versioning-axum)
   [![examples](https://img.shields.io/badge/example-code-2B91AF)](../../tree/main/asp-axum/examples)
 
 - **API Versioning with Utoipa**
   <div>Adds API versioning support for OpenAPI with [utoipa]</div>
 
-  [![crates.io](https://img.shields.io/crates/v/asp-rs-versioning.svg)](https://crates.io/crates/asp-versioning-utoipa)
+  [![crates.io](https://img.shields.io/crates/v/asp-rs-versioning.svg)](https://crates.io/crates/api-versioning-utoipa)
   [![examples](https://img.shields.io/badge/example-code-2B91AF)](../../tree/main/asp-utoipa/examples)
 
 ## Discussion
