@@ -54,9 +54,9 @@ macro_rules! policy {
             /// # Arguments
             ///
             /// * `date` - the policy effective [date and time](SystemTime)
-            pub fn as_of(date: SystemTime) -> Self {
+            pub fn as_of(date: impl Into<SystemTime>) -> Self {
                 Self {
-                    date: Some(date),
+                    date: Some(date.into()),
                     links: Vec::new(),
                 }
             }
